@@ -21,10 +21,10 @@ const routes = [
     component: asyncComponent(() => import('components/User/UserList')),
   },
   {
-    path: '/update-password',
+    path: '/profile/update-password',
     exact: true,
     name: 'Update Password',
-    component: asyncComponent(() => import('components/UpdatePassword')),
+    component: asyncComponent(() => import('components/Profile/UpdatePassword')),
   },
 ];
 
