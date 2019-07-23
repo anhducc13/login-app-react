@@ -8,7 +8,7 @@ const PrivateRouter = ({ component: Component, ...rest }) => {
 
   useEffect(() => {
     authServices.currentUser()
-      .then(() => { })
+      .then(() => {})
       .catch(() => setHasSession(false))
   }, [])
   return (

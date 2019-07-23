@@ -4,14 +4,14 @@ import { Layout } from 'antd';
 import routes from 'routes';
 import CustomSider from 'components/CustomSider';
 import CustomHeader from 'components/CustomHeader';
-import PrivateRouter from 'utils/PrivateRouter';
 
 const { Content, Footer } = Layout;
 
 const DefaultLayout = (props) => {
+  console.log(props);
 
   const [collapse, setCollapse] = useState(false);
-  
+
   return (
     <>
       <Layout>
@@ -26,7 +26,7 @@ const DefaultLayout = (props) => {
             <Switch>
               {routes.map(route =>
                 route.component ? (
-                  <PrivateRouter
+                  <Route
                     key={route.name}
                     path={route.path}
                     exact={route.exact}
@@ -35,7 +35,7 @@ const DefaultLayout = (props) => {
                   />
                 ) : null,
               )}
-              <Redirect from="/" to="/" />
+              <Redirect from="/" to="/home" />
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ductt ©2019 UET</Footer>

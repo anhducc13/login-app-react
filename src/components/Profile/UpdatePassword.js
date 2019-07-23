@@ -54,7 +54,7 @@ const UpdatePassword = (props) => {
           .then(() => {
             setLoading(false);
             toast.success(`Update password success!`);
-            props.history.push('/');
+            props.history.push('/profile');
           })
           .catch(err => {
             setLoading(false);

@@ -23,5 +23,6 @@
         "paths": ["src"]
       }
     }
-  }
+  },
+  "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
 }

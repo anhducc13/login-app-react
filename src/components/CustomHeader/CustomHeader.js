@@ -11,7 +11,7 @@ const { Header } = Layout;
 const { confirm } = Modal;
 
 const CustomHeader = (props) => {
-  const { isCollapse, collapseSider } = props;
+  const { isCollapse, collapseSider, currentUser } = props;
 
   const handleLogout = () => {
     confirm({
@@ -42,7 +42,7 @@ const CustomHeader = (props) => {
   const menu = (
     <Menu>
       <Menu.Item key="1">
-        <Link to="/profile/update-password">
+        <Link to="/profile">
           <Icon type="user" />
           <span>Profile</span>
         </Link>
@@ -77,7 +77,7 @@ const CustomHeader = (props) => {
               color: '#4285F4',
             }}
           >
-            Crush DUCTT
+            Ductt
           </span>
         </span>
       </Dropdown>
