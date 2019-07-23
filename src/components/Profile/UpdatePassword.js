@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Typography, Button } from 'antd';
 import { authServices } from 'services';
 import { toast } from 'react-toastify';
+import { RULES_PASSWORD } from 'constants/RuleValidators';
 
 const { Title } = Typography;
 const { Password } = Input;
@@ -15,6 +16,7 @@ const UpdatePassword = (props) => {
     wrapperCol: {
       xs: { span: 24 },
       sm: { span: 12 },
+      lg: { span: 8 },
     },
   };
 
@@ -26,6 +28,10 @@ const UpdatePassword = (props) => {
       },
       sm: {
         span: 12,
+        offset: 6,
+      },
+      lg: {
+        span: 8,
         offset: 6,
       },
     },
@@ -52,17 +58,19 @@ const UpdatePassword = (props) => {
           })
           .catch(err => {
             setLoading(false);
-            if(err === 400) {
-              resetFields();
-              return;
+            switch (err) {
+              case 400:
+                resetFields();
+                break;
+              case 403:
+                props.history.push('/403');
+                break;
+              case 404:
+                props.history.push('/404');
+                break;
+              default:
+                props.history.push('/500');
             }
-            if(err === 403) {
-              props.history.push('/403');
-            }
-            if(err === 404) {
-              props.history.push('/404');
-            } 
-            props.history.push('/500');
           })
       }
     })
@@ -86,12 +94,7 @@ const UpdatePassword = (props) => {
       <Form {...formItemLayout}>
         <Form.Item label="Password">
           {getFieldDecorator('password', {
-            rules: [
-              {
-                required: true,
-                message: "Required"
-              },
-            ],
+            rules: RULES_PASSWORD,
             validateFirst: true,
             validateTrigger: null,
           })(
@@ -100,12 +103,7 @@ const UpdatePassword = (props) => {
         </Form.Item>
         <Form.Item label="New Password">
           {getFieldDecorator('newPassword', {
-            rules: [
-              {
-                required: true,
-                message: "Required"
-              },
-            ],
+            rules: RULES_PASSWORD,
             validateFirst: true,
             validateTrigger: null,
           })(

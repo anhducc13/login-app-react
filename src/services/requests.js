@@ -7,21 +7,21 @@ export const BASE_API_URL: string = `${process.env.REACT_APP_BASE_API_URL || 'lo
 
 const customAxios = axios.create({
   baseURL: BASE_API_URL,
+  withCredentials : true,
 });
 
-customAxios.interceptors.request.use(
-  config => {
-    config.withCredentials = true
-    const token = cookiesHelpers.getByName('accessToken');
-    if ( token !== '' ) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
+// customAxios.interceptors.request.use(
+//   config => {
+//     const token = cookiesHelpers.getByName('accessToken');
+//     if ( token !== '' ) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   }
+// );
 
 
 customAxios.interceptors.response.use(

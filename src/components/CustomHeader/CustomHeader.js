@@ -24,13 +24,16 @@ const CustomHeader = (props) => {
             props.history.push('/login');
           })
           .catch((err) => {
-            if (err === 403) {
-              props.history.push('/403');
+            switch (err) {
+              case 403:
+                props.history.push('/403');
+                break;
+              case 404:
+                props.history.push('/404');
+                break;
+              default:
+                props.history.push('/500');
             }
-            if (err === 404) {
-              props.history.push('/404');
-            }
-            props.history.push('/500');
           })
       },
     });

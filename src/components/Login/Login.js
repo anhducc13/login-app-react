@@ -12,6 +12,7 @@ import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 
 const { Password } = Input;
 
@@ -21,7 +22,9 @@ const Login = (props) => {
     xs: { span: 22, offset: 1 },
     sm: { span: 16, offset: 4 },
     md: { span: 12, offset: 6 },
-    lg: { span: 10, offset: 7 }
+    lg: { span: 10, offset: 7 },
+    xl: { span: 8, offset: 8},
+    xxl: { span: 6, offset: 9},
   }
   const [loading, setLoading] = useState(false);
   const { getFieldDecorator, validateFields, resetFields } = props.form;
@@ -38,20 +41,25 @@ const Login = (props) => {
         authServices.loginUser(params)
           .then(res => {
             setLoading(false);
-            const data = res.data;
+            const {data} = res;
             toast.success(`Welcome back, ${data.username}!`);
             props.history.push('/');
           })
           .catch(err => {
             setLoading(false);
-            if(err === 400) {
-              resetFields();
-              return;
+            switch (err) {
+              case 400:
+                resetFields();
+                break;
+              case 403:
+                props.history.push('/403');
+                break;
+              case 404:
+                props.history.push('/404');
+                break;
+              default:
+                props.history.push('/500');
             }
-            if(err === 404) {
-              props.history.push('/404');
-            } 
-            props.history.push('/500');
           })
       }
     })
@@ -74,12 +82,7 @@ const Login = (props) => {
           </Title>
           <Form.Item label="Username">
             {getFieldDecorator('username', {
-              rules: [
-                {
-                  required: true,
-                  message: "Required"
-                },
-              ],
+              rules: RULES_USERNAME,
               validateFirst: true,
               validateTrigger: null,
             })(
@@ -88,12 +91,7 @@ const Login = (props) => {
           </Form.Item>
           <Form.Item label="Password">
             {getFieldDecorator('password', {
-              rules: [
-                {
-                  required: true,
-                  message: "Required"
-                },
-              ],
+              rules: RULES_PASSWORD,
               validateFirst: true,
               validateTrigger: null,
             })(

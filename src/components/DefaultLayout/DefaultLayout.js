@@ -4,13 +4,14 @@ import { Layout } from 'antd';
 import routes from 'routes';
 import CustomSider from 'components/CustomSider';
 import CustomHeader from 'components/CustomHeader';
+import PrivateRouter from 'utils/PrivateRouter';
 
 const { Content, Footer } = Layout;
 
 const DefaultLayout = (props) => {
 
   const [collapse, setCollapse] = useState(false);
-
+  
   return (
     <>
       <Layout>
@@ -25,7 +26,7 @@ const DefaultLayout = (props) => {
             <Switch>
               {routes.map(route =>
                 route.component ? (
-                  <Route
+                  <PrivateRouter
                     key={route.name}
                     path={route.path}
                     exact={route.exact}
