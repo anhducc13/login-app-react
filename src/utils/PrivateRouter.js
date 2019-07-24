@@ -7,18 +7,18 @@ import { UserContext } from 'UserContext';
 const PrivateRouter = ({ component: Component, ...rest }) => {
   const [user, setUser] = useContext(UserContext);
 
-  async function fetchUser() {
-    // try {
-      const response = await authServices.currentUser()
-      const res = response.data
-      return res
-    // } catch(err) {
-    //   setUser(null)
-    // }
-  }
-  useEffect(() => {
-    setUser(fetchUser());
-  }, [user])
+  // async function fetchUser() {
+  //   // try {
+  //     const response = await authServices.currentUser()
+  //     const res = response.data
+  //     return res
+  //   // } catch(err) {
+  //   //   setUser(null)
+  //   // }
+  // }
+  // useEffect(() => {
+  //   setUser(fetchUser());
+  // }, [user])
 
   return (
     <Route
