@@ -44,19 +44,26 @@ const ForgotPassword = (props) => {
           })
           .catch(err => {
             setLoading(false);
-            switch (err) {
-              case 400:
+            if(err && err.response) {
+              const { status } = err.response;
+              if (status === 400){
                 resetFields();
-                break;
-              case 403:
-                props.history.push('/403');
-                break;
-              case 404:
+                return;
+              }
+              if(status === 404) {
                 props.history.push('/404');
-                break;
-              default:
-                props.history.push('/500');
+                return;
+              } 
+              if (status === 403) {
+                toast.error('Account has been block. Please try after');
+                return;
+              } 
+              if (status > 400 && status < 500) {
+                props.history.push('/403');
+                return;
+              }
             }
+            props.history.push('/500');
           })
       }
     })

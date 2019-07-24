@@ -1,32 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import { cookiesHelpers } from 'helpers';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { authServices } from 'services';
-import { UserContext } from 'UserContext';
 
 const PrivateRouter = ({ component: Component, ...rest }) => {
-  const [user, setUser] = useContext(UserContext);
-
-  // async function fetchUser() {
-  //   // try {
-  //     const response = await authServices.currentUser()
-  //     const res = response.data
-  //     return res
-  //   // } catch(err) {
-  //   //   setUser(null)
-  //   // }
-  // }
-  // useEffect(() => {
-  //   setUser(fetchUser());
-  // }, [user])
-
+  const hasSession = cookiesHelpers.getByName('access_token_cookie') !== '';
   return (
     <Route
       {...rest}
-      render={(props) => user ?
+      render={(props) => hasSession ?
         <Component {...props} /> :
         (
-          <Redirect to='/login' />
+          <>
+            {toast.error("Expired session. Please login to continue!")}
+            <Redirect to='/login' />
+          </>
         )
 
       }

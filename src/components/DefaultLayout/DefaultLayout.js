@@ -26,7 +26,7 @@ const DefaultLayout = (props) => {
             <Switch>
               {routes.map(route =>
                 route.component ? (
-                  <Route
+                  <PrivateRouter
                     key={route.name}
                     path={route.path}
                     exact={route.exact}

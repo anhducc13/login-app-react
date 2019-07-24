@@ -24,12 +24,12 @@ const Login = (props) => {
     sm: { span: 16, offset: 4 },
     md: { span: 12, offset: 6 },
     lg: { span: 10, offset: 7 },
-    xl: { span: 8, offset: 8},
-    xxl: { span: 6, offset: 9},
+    xl: { span: 8, offset: 8 },
+    xxl: { span: 6, offset: 9 },
   }
   const [loading, setLoading] = useState(false);
-
   const [user, setUser] = useContext(UserContext);
+
   const { getFieldDecorator, validateFields, resetFields } = props.form;
 
   const handleSubmit = (e) => {
@@ -44,25 +44,33 @@ const Login = (props) => {
         authServices.loginUser(params)
           .then(res => {
             setLoading(false);
-            const {data} = res;
+            const { data } = res;
+            setUser(data);
             toast.success(`Welcome back, ${data.username}!`);
             props.history.push('/');
           })
           .catch(err => {
             setLoading(false);
-            switch (err) {
-              case 400:
+            if (err && err.response) {
+              const { status } = err.response;
+              if (status === 400){
                 resetFields();
-                break;
-              case 403:
-                props.history.push('/403');
-                break;
-              case 404:
+                return;
+              }
+              if (status === 404) {
                 props.history.push('/404');
-                break;
-              default:
-                props.history.push('/500');
+                return;
+              }
+              if (status === 403) {
+                toast.error('Account has been block. Please try after');
+                return;
+              }
+              if (status > 400 && status < 500) {
+                props.history.push('/403');
+                return;
+              }
             }
+            props.history.push('/500');
           })
       }
     })
@@ -109,7 +117,7 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
-          
+
           <Form.Item>
             <Button
               type="primary"

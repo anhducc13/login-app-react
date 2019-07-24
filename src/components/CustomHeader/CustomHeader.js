@@ -13,7 +13,7 @@ const { Header } = Layout;
 const { confirm } = Modal;
 
 const CustomHeader = (props) => {
-  const { isCollapse, collapseSider, currentUser } = props;
+  const { isCollapse, collapseSider } = props;
   const [user, setUser] = useContext(UserContext);
 
   const handleLogout = () => {
@@ -23,20 +23,24 @@ const CustomHeader = (props) => {
       onOk() {
         authServices.logoutUser()
           .then(() => {
+            setUser(null);
             toast.success(`Logout success. Goodbye!!!`);
             props.history.push('/login');
           })
           .catch((err) => {
-            switch (err) {
-              case 403:
-                props.history.push('/403');
-                break;
-              case 404:
+            if(err && err.response) {
+              const { status, data } = err.response;
+              if(status === 404) {
                 props.history.push('/404');
-                break;
-              default:
-                props.history.push('/500');
+                return;
+              } 
+              if (status > 400 && status < 500) {
+                toast.error(data.message);
+                props.history.push('/403');
+                return;
+              }
             }
+            props.history.push('/500');
           })
       },
     });

@@ -6,7 +6,7 @@ import asyncComponent from "utils/asyncComponent";
 import PrivateRouter from 'utils/PrivateRouter';
 import PageError from 'components/PageError';
 import { toast } from 'react-toastify';
-import { UserProvider } from './UserContext';
+import { UserProvider } from 'UserContext';
 
 toast.configure();
 

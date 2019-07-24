@@ -1,4 +1,5 @@
 {
+  // "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
@@ -23,6 +24,5 @@
         "paths": ["src"]
       }
     }
-  },
-  "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+  }
 }

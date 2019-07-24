@@ -1,24 +1,47 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
-import reqwest from 'reqwest';
+import { Table, Button, Icon } from 'antd';
+import { Link } from 'react-router-dom';
+import { userServices } from 'services';
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
+    title: 'Id',
+    dataIndex: 'id',
     sorter: true,
-    render: name => `${name.first} ${name.last}`,
-    width: '40%',
   },
   {
-    title: 'Gender',
-    dataIndex: 'gender',
-    filters: [{ text: 'Male', value: 'male' }, { text: 'Female', value: 'female' }],
-    width: '20%',
+    title: 'Username',
+    dataIndex: 'username',
+    sorter: true,
   },
   {
     title: 'Email',
     dataIndex: 'email',
+    sorter: true,
+  },
+  {
+    title: 'Status',
+    dataIndex: 'is_active',
+    render: isActive => {
+      return isActive ? (
+        <Button type="primary" size="small">Active</Button>
+      ) : (
+        <Button type="danger" size="small">Inctive</Button>
+        )
+    },
+    filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],
+  },
+  {
+    title: 'Action',
+    render: () => {
+      return (
+        <>
+          <Link to="/"><Icon type="folder-open" style={{ marginLeft: 6, fontSize: 20 }} /></Link>
+          <Link to="/"><Icon type="edit" style={{ color: "#89CC6F", marginLeft: 6, fontSize: 20}} /></Link>
+          <Link to="/"><Icon type="delete" style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20}} /></Link>
+        </>
+      )
+    },
   },
 ];
 
@@ -30,7 +53,7 @@ export default class UserList extends Component {
   };
 
   componentDidMount() {
-    this.fetch();
+    this.fetchUser();
   }
 
   handleTableChange = (pagination, filters, sorter) => {
@@ -39,7 +62,7 @@ export default class UserList extends Component {
     this.setState({
       pagination: pager,
     });
-    this.fetch({
+    this.fetchUser({
       results: pagination.pageSize,
       page: pagination.current,
       sortField: sorter.field,
@@ -48,35 +71,26 @@ export default class UserList extends Component {
     });
   };
 
-  fetch = (params = {}) => {
-    console.log('params:', params);
+  fetchUser = (params = {}) => {
     this.setState({ loading: true });
-    reqwest({
-      url: 'https://randomuser.me/api',
-      method: 'get',
-      data: {
-        results: 10,
-        ...params,
-      },
-      type: 'json',
-    }).then(data => {
-      const pagination = { ...this.state.pagination };
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = 200;
-      this.setState({
-        loading: false,
-        data: data.results,
-        pagination,
-      });
-    });
+    userServices.fetchUsers()
+      .then(res => {
+        const pagination = { ...this.state.pagination };
+        pagination.total = res.length;
+        this.setState({
+          loading: false,
+          data: res,
+          pagination,
+        });
+      })
   };
 
   render() {
     return (
       <Table
+        size="small"
+        rowKey={record => record.id}
         columns={columns}
-        rowKey={record => record.login.uuid}
         dataSource={this.state.data}
         pagination={this.state.pagination}
         loading={this.state.loading}
