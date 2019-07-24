@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Form,
   Input,
@@ -13,6 +13,7 @@ import { authServices } from 'services';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
+import { UserContext } from 'UserContext';
 
 const { Password } = Input;
 
@@ -27,6 +28,8 @@ const Login = (props) => {
     xxl: { span: 6, offset: 9},
   }
   const [loading, setLoading] = useState(false);
+
+  const [user, setUser] = useContext(UserContext);
   const { getFieldDecorator, validateFields, resetFields } = props.form;
 
   const handleSubmit = (e) => {

@@ -1,20 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { authServices } from 'services';
+import { UserContext } from 'UserContext';
 
 const PrivateRouter = ({ component: Component, ...rest }) => {
-  const [hasSession, setHasSession] = useState(true);
+  const [user, setUser] = useContext(UserContext);
 
+  async function fetchUser() {
+    // try {
+      const response = await authServices.currentUser()
+      const res = response.data
+      return res
+    // } catch(err) {
+    //   setUser(null)
+    // }
+  }
   useEffect(() => {
-    authServices.currentUser()
-      .then(() => {})
-      .catch(() => setHasSession(false))
-  }, [])
+    setUser(fetchUser());
+  }, [user])
+
   return (
     <Route
       {...rest}
-      render={(props) => hasSession ?
+      render={(props) => user ?
         <Component {...props} /> :
         (
           <Redirect to='/login' />
@@ -26,5 +35,3 @@ const PrivateRouter = ({ component: Component, ...rest }) => {
 }
 
 export default PrivateRouter;
-
-// (cookiesHelpers.getByName('accessToken') !== ''

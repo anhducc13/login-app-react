@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Layout, Icon, Dropdown, Menu, Avatar, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import './CustomHeader.scss';
+import { UserContext } from 'UserContext';
+
 
 import { authServices } from 'services';
 import { toast } from 'react-toastify';
@@ -12,6 +14,7 @@ const { confirm } = Modal;
 
 const CustomHeader = (props) => {
   const { isCollapse, collapseSider, currentUser } = props;
+  const [user, setUser] = useContext(UserContext);
 
   const handleLogout = () => {
     confirm({
@@ -77,7 +80,7 @@ const CustomHeader = (props) => {
               color: '#4285F4',
             }}
           >
-            Ductt
+            {user && user.username}
           </span>
         </span>
       </Dropdown>

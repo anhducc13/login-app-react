@@ -4,11 +4,11 @@ import { Layout } from 'antd';
 import routes from 'routes';
 import CustomSider from 'components/CustomSider';
 import CustomHeader from 'components/CustomHeader';
+import PrivateRouter from 'utils/PrivateRouter';
 
 const { Content, Footer } = Layout;
 
 const DefaultLayout = (props) => {
-  console.log(props);
 
   const [collapse, setCollapse] = useState(false);
 
