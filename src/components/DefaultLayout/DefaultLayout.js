@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import { Layout } from 'antd';
 import routes from 'routes';
 import CustomSider from 'components/CustomSider';

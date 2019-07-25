@@ -11,8 +11,7 @@ import './Register.scss';
 import Title from 'antd/lib/typography/Title';
 import { RULES_EMAIL, RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 import { authServices } from 'services';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import openNotificationWithIcon from 'helpers/notification';
 
 const { Password } = Input;
 
@@ -23,8 +22,8 @@ const Register = (props) => {
     sm: { span: 16, offset: 4 },
     md: { span: 12, offset: 6 },
     lg: { span: 10, offset: 7 },
-    xl: { span: 8, offset: 8},
-    xxl: { span: 6, offset: 9},
+    xl: { span: 8, offset: 8 },
+    xxl: { span: 6, offset: 9 },
   }
   const [loading, setLoading] = useState(false);
   const { getFieldDecorator, getFieldValue, validateFields, resetFields } = props.form;
@@ -42,19 +41,20 @@ const Register = (props) => {
         authServices.registerUser(params)
           .then(res => {
             setLoading(false);
-            const {data} = res;
-            toast.success(`Please verify account in email ${data.email} to login system`);
+            const { data } = res;
+            openNotificationWithIcon('success', 'Success',
+              `Please verify account in email ${data.email} to login system`)
             props.history.push('/login');
           })
           .catch(err => {
             setLoading(false);
-            if(err && err.response) {
+            if (err && err.response) {
               const { status } = err.response;
-              if (status === 400){
+              if (status === 400) {
                 resetFields();
                 return;
               }
-              if(status === 404) {
+              if (status === 404) {
                 props.history.push('/404');
                 return;
               }

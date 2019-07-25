@@ -1,8 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { cookiesHelpers } from 'helpers';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import openNotificationWithIcon from 'helpers/notification';
 
 const PrivateRouter = ({ component: Component, ...rest }) => {
   const hasSession = cookiesHelpers.getByName('access_token_cookie') !== '';
@@ -13,7 +12,7 @@ const PrivateRouter = ({ component: Component, ...rest }) => {
         <Component {...props} /> :
         (
           <>
-            {toast.error("Expired session. Please login to continue!")}
+            {openNotificationWithIcon('error', 'Error', 'Expired session. Please login to continue!')}
             <Redirect to='/login' />
           </>
         )

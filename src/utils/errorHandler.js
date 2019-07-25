@@ -1,21 +1,19 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import openNotificationWithIcon from 'helpers/notification';
 
 const errorHandler = (error) => {
   const { status } = error.response;
   if (status === 400)
-    toast.error(error.response.data.message || "Error");
-    
+    openNotificationWithIcon('error', 'Error', error.response.data.message)
   return Promise.reject(error)
 }
 
 const errorRequest = (error) => {
-  toast.error(error.request || "Error");
+  openNotificationWithIcon('error', 'Error', error.request || "")
   return Promise.reject(error)
 }
 
 const errorUndefined = (error) => {
-  toast.error(error.message || "Error");
+  openNotificationWithIcon('error', 'Error', error.message || "")
   return Promise.reject(error)
 }
 

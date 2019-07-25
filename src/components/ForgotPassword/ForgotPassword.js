@@ -10,8 +10,7 @@ import { Link } from 'react-router-dom';
 import './ForgotPassword.scss';
 import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import openNotificationWithIcon from 'helpers/notification';
 import { RULES_USERNAME, RULES_EMAIL } from 'constants/RuleValidators';
 
 
@@ -21,8 +20,8 @@ const ForgotPassword = (props) => {
     sm: { span: 16, offset: 4 },
     md: { span: 12, offset: 6 },
     lg: { span: 10, offset: 7 },
-    xl: { span: 8, offset: 8},
-    xxl: { span: 6, offset: 9},
+    xl: { span: 8, offset: 8 },
+    xxl: { span: 6, offset: 9 },
   }
   const [loading, setLoading] = useState(false);
   const { getFieldDecorator, validateFields, resetFields } = props.form;
@@ -39,25 +38,27 @@ const ForgotPassword = (props) => {
         authServices.forgotPasswordUser(params)
           .then(() => {
             setLoading(false);
-            toast.success(`Please check email ${values.email} to receive new password`);
+            openNotificationWithIcon('success', 'Success',
+              `Please check email ${values.email} to receive new password`)
             props.history.push('/login');
           })
           .catch(err => {
             setLoading(false);
-            if(err && err.response) {
+            if (err && err.response) {
               const { status } = err.response;
-              if (status === 400){
+              if (status === 400) {
                 resetFields();
                 return;
               }
-              if(status === 404) {
+              if (status === 404) {
                 props.history.push('/404');
                 return;
-              } 
+              }
               if (status === 403) {
-                toast.error('Account has been block. Please try after');
+                openNotificationWithIcon('error', 'Error',
+                  'Account has been block. Please try after')
                 return;
-              } 
+              }
               if (status > 400 && status < 500) {
                 props.history.push('/403');
                 return;
@@ -107,7 +108,7 @@ const ForgotPassword = (props) => {
               <Link to="/login">Back to login page?</Link>
             </Col>
           </Row>
-          
+
           <Form.Item>
             <Button
               type="primary"

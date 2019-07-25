@@ -3,10 +3,8 @@ import { Layout, Icon, Dropdown, Menu, Avatar, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import './CustomHeader.scss';
 import { UserContext } from 'UserContext';
-
-
+import openNotificationWithIcon from 'helpers/notification';
 import { authServices } from 'services';
-import { toast } from 'react-toastify';
 
 
 const { Header } = Layout;
@@ -24,7 +22,7 @@ const CustomHeader = (props) => {
         authServices.logoutUser()
           .then(() => {
             setUser(null);
-            toast.success(`Logout success. Goodbye!!!`);
+            openNotificationWithIcon('success', 'Success', `Logout success. Goodbye!!!`)
             props.history.push('/login');
           })
           .catch((err) => {
@@ -35,7 +33,7 @@ const CustomHeader = (props) => {
                 return;
               } 
               if (status > 400 && status < 500) {
-                toast.error(data.message);
+                openNotificationWithIcon('error', 'Error', data.message)
                 props.history.push('/403');
                 return;
               }

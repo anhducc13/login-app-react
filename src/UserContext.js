@@ -1,9 +1,10 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { authServices } from 'services';
 
-export const UserContext = createContext();
+export const UserContext = createContext(null);
 
 export const UserProvider = (props) => {
+  const { children } = props
   const [user, setUser] = useState(null);
 
   const fetchUser = async() => {
@@ -22,7 +23,7 @@ export const UserProvider = (props) => {
 
   return (
     <UserContext.Provider value={[user, setUser]}>
-      {props.children}
+      {children}
     </UserContext.Provider>
   )
 }

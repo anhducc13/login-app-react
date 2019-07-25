@@ -2,12 +2,6 @@
 import asyncComponent from "utils/asyncComponent";
 
 const routes = [
-  // {
-  //   path: '/',
-  //   exact: true,
-  //   name: 'Home',
-  //   component: asyncComponent(() => import('components/Home')),
-  // },
   {
     path: '/home',
     exact: true,
@@ -19,6 +13,12 @@ const routes = [
     exact: true,
     name: 'List User',
     component: asyncComponent(() => import('components/User/UserList')),
+  },
+  {
+    path: '/user/add-user',
+    exact: true,
+    name: 'Add User',
+    component: asyncComponent(() => import('components/User/AddUser')),
   },
   {
     path: '/profile',

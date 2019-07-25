@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Form, Input, Typography, Button } from 'antd';
-import { authServices } from 'services';
+import { Form, Input, Typography, Button, Checkbox } from 'antd';
+import { userServices } from 'services';
+import { RULES_USERNAME, RULES_EMAIL } from 'constants/RuleValidators';
 import openNotificationWithIcon from 'helpers/notification';
-import { RULES_PASSWORD } from 'constants/RuleValidators';
 
 const { Title } = Typography;
-const { Password } = Input;
 
-const UpdatePassword = (props) => {
+
+const AddUser = (props) => {
+  const { form, history } = props;
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -39,7 +40,9 @@ const UpdatePassword = (props) => {
 
   const [loading, setLoading] = useState(false);
 
-  const { getFieldDecorator, getFieldValue, validateFields, resetFields } = props.form;
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const { getFieldDecorator, validateFields, resetFields } = form;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,34 +50,36 @@ const UpdatePassword = (props) => {
       if (!error) {
         setLoading(true);
         const params = {
-          "old_password": values.password,
-          "new_password": values.newPassword,
+          "email": values.email,
+          "username": values.username,
+          "is_admin": isAdmin
         }
-        authServices.updatePasswordUser(params)
+        userServices.addUser(params)
           .then(() => {
             setLoading(false);
-            openNotificationWithIcon('success', 'Success', `Update password success!`)
-            props.history.push('/profile');
+            openNotificationWithIcon('success', 'Success', 'Create user success!')
+            history.push('/list-user');
           })
           .catch(err => {
             setLoading(false);
-            if(err && err.response) {
+            if (err && err.response) {
               const { status, data } = err.response;
               if (status === 400) {
                 resetFields();
+                setIsAdmin(false)
                 return;
               }
-              if(status === 404) {
-                props.history.push('/404');
+              if (status === 404) {
+                history.push('/404');
                 return;
-              } 
+              }
               if (status > 400 && status < 500) {
                 openNotificationWithIcon('error', 'Error', data.message)
-                props.history.push('/403');
+                history.push('/403');
                 return;
               }
             }
-            props.history.push('/500');
+            history.push('/500');
           })
       }
     })
@@ -93,44 +98,31 @@ const UpdatePassword = (props) => {
           marginBottom: 20
         }}
       >
-        Update Password
+        Add New User
       </Title>
       <Form {...formItemLayout}>
-        <Form.Item label="Password">
-          {getFieldDecorator('password', {
-            rules: RULES_PASSWORD,
+        <Form.Item label="E-mail">
+          {getFieldDecorator('email', {
+            rules: RULES_EMAIL,
             validateFirst: true,
             validateTrigger: null,
           })(
-            <Password />
+            <Input />
           )}
         </Form.Item>
-        <Form.Item label="New Password">
-          {getFieldDecorator('newPassword', {
-            rules: RULES_PASSWORD,
+        <Form.Item label="Username">
+          {getFieldDecorator('username', {
+            rules: RULES_USERNAME,
             validateFirst: true,
             validateTrigger: null,
           })(
-            <Password />
+            <Input />
           )}
         </Form.Item>
-        <Form.Item label="Confirm">
-          {getFieldDecorator('confirm', {
-            rules: [
-              {
-                required: true,
-                message: "Required"
-              },
-              {
-                pattern: new RegExp(getFieldValue('newPassword')),
-                message: "Confirm password not match"
-              }
-            ],
-            validateFirst: true,
-            validateTrigger: null,
-          })(
-            <Password />
-          )}
+        <Form.Item {...tailFormItemLayout}>
+          <Checkbox checked={isAdmin} onChange={() => setIsAdmin(!isAdmin)}>
+            Admin
+          </Checkbox>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
           <Button
@@ -141,7 +133,7 @@ const UpdatePassword = (props) => {
             loading={loading}
             onClick={handleSubmit}
           >
-            Save
+            Add
           </Button>
         </Form.Item>
       </Form>
@@ -149,4 +141,6 @@ const UpdatePassword = (props) => {
   )
 }
 
-export default Form.create()(UpdatePassword);
+export default Form.create()(AddUser);
+
+

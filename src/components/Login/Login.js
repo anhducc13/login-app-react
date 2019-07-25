@@ -10,8 +10,7 @@ import { Link } from 'react-router-dom';
 import './Login.scss';
 import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import openNotificationWithIcon from 'helpers/notification';
 import { RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 import { UserContext } from 'UserContext';
 
@@ -46,7 +45,7 @@ const Login = (props) => {
             setLoading(false);
             const { data } = res;
             setUser(data);
-            toast.success(`Welcome back, ${data.username}!`);
+            openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
             props.history.push('/');
           })
           .catch(err => {
@@ -62,7 +61,7 @@ const Login = (props) => {
                 return;
               }
               if (status === 403) {
-                toast.error('Account has been block. Please try after');
+                openNotificationWithIcon('error', 'error', 'Account has been block. Please try after')
                 return;
               }
               if (status > 400 && status < 500) {
