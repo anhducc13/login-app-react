@@ -8,12 +8,12 @@ const errorHandler = (error) => {
 }
 
 const errorRequest = (error) => {
-  openNotificationWithIcon('error', 'Error', error.request || "")
+  openNotificationWithIcon('error', 'Error', "Request Error")
   return Promise.reject(error)
 }
 
 const errorUndefined = (error) => {
-  openNotificationWithIcon('error', 'Error', error.message || "")
+  openNotificationWithIcon('error', 'Error', "Error")
   return Promise.reject(error)
 }
 
