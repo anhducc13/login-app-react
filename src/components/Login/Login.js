@@ -13,6 +13,7 @@ import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 import { UserContext } from 'UserContext';
+import { GoogleLogin } from 'react-google-login';
 
 const { Password } = Input;
 
@@ -30,7 +31,7 @@ const Login = (props) => {
   }
 
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useContext(UserContext);
+  const [, setUser] = useContext(UserContext);
 
   const { getFieldDecorator, validateFields, resetFields } = form;
 
@@ -117,6 +118,12 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
+          <GoogleLogin
+            clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
+            buttonText="Login"
+            onSuccess={res => console.log(res)}
+            onFailure={error => console.log(error)}
+          />
           <Form.Item>
             <Button
               type="primary"

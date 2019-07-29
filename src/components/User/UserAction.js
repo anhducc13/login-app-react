@@ -7,7 +7,7 @@ const { Title } = Typography;
 
 
 const UserAction = (props) => {
-  const { userId } = props
+  const { userId } = props;
 
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -60,6 +60,7 @@ const UserAction = (props) => {
       user_id: userId,
     });
     return (() => { })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleTableChange = (_pagination, _filters, _sorter) => {

@@ -1,11 +1,11 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { authServices } from 'services';
 
-export const UserContext = createContext(null);
+export const UserContext = createContext();
 
 export const UserProvider = (props) => {
   const { children } = props
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
 
   const fetchUser = async() => {
     try {
