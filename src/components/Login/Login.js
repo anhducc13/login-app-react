@@ -18,6 +18,8 @@ const { Password } = Input;
 
 
 const Login = (props) => {
+  const { history, form } = props;
+
   const bodyLayout = {
     xs: { span: 22, offset: 1 },
     sm: { span: 16, offset: 4 },
@@ -26,10 +28,11 @@ const Login = (props) => {
     xl: { span: 8, offset: 8 },
     xxl: { span: 6, offset: 9 },
   }
+
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useContext(UserContext);
 
-  const { getFieldDecorator, validateFields, resetFields } = props.form;
+  const { getFieldDecorator, validateFields, resetFields } = form;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,18 +49,18 @@ const Login = (props) => {
             const { data } = res;
             setUser(data);
             openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
-            props.history.push('/');
+            history.push('/');
           })
           .catch(err => {
             setLoading(false);
             if (err && err.response) {
               const { status } = err.response;
-              if (status === 400){
+              if (status === 400) {
                 resetFields();
                 return;
               }
               if (status === 404) {
-                props.history.push('/404');
+                history.push('/404');
                 return;
               }
               if (status === 403) {
@@ -65,17 +68,15 @@ const Login = (props) => {
                 return;
               }
               if (status > 400 && status < 500) {
-                props.history.push('/403');
+                history.push('/403');
                 return;
               }
             }
-            props.history.push('/500');
+            history.push('/500');
           })
       }
     })
   }
-
-
 
   return (
     <div className="Login">
@@ -116,7 +117,6 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
-
           <Form.Item>
             <Button
               type="primary"
@@ -137,5 +137,6 @@ const Login = (props) => {
     </div>
   );
 };
+
 
 export default Form.create()(Login);

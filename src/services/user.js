@@ -1,11 +1,23 @@
 // @flow
 import { requestServices } from 'services';
 
-const fetchUsers = (args) => requestServices.customAxios.get('/admin/users', {params: args}).then(res => res.data);
+const fetchUsers = (args) => requestServices.customAxios.get('/admin/users', { params: args })
+  .then(res => res.data.data);
+
+const fetchUser = (id) => requestServices.customAxios.get(`/admin/user/${id}`)
+  .then(res => res.data.data);
+
+const fetchUserActions = ((args) => requestServices.customAxios.get('/admin/user/action', { params: args })
+  .then(res => res.data.data));
 
 const addUser = (params) => requestServices.customAxios.post('/admin/user', params).then(res => res.data);
 
+const deleteUser = (id) => requestServices.customAxios.delete(`/admin/user/${id}`).then(res => res.data);
+
 export default {
+  fetchUser,
   fetchUsers,
-  addUser
+  addUser,
+  deleteUser,
+  fetchUserActions,
 };

@@ -21,6 +21,18 @@ const routes = [
     component: asyncComponent(() => import('components/User/AddUser')),
   },
   {
+    path: '/user/:id',
+    exact: true,
+    name: 'User Infomation',
+    component: asyncComponent(() => import('components/User/UserInfo')),
+  },
+  {
+    path: '/user/activity/:id',
+    exact: true,
+    name: 'User Activity',
+    component: asyncComponent(() => import('components/User/UserAction')),
+  },
+  {
     path: '/profile',
     exact: true,
     name: 'Profile',

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Table, Button, Icon, Row, Col, Typography } from 'antd';
-import { Link, Redirect } from 'react-router-dom';
+import { Table, Button, Icon, Row, Col, Typography, Modal } from 'antd';
+import { Link } from 'react-router-dom';
 import { userServices } from 'services';
+import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { cookiesHelpers } from 'helpers';
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 
 
@@ -16,6 +17,46 @@ const UserList = (props) => {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useContext(UserContext);
+
+  const fetchUser = (args = {}) => {
+    setLoading(true);
+    userServices.fetchUsers(args)
+      .then(res => {
+        const pager = Object.assign(pagination);
+        pager.total = res.total;
+        setLoading(false);
+        setData(res.results);
+        setPagination(pager)
+      })
+      .catch((err) => {
+        setLoading(false);
+        openNotificationWithIcon('error', 'Error', err.response.data.message);
+        props.history.push('/home');
+      })
+  };
+
+  const handleDeleteUser = (id) => {
+    confirm({
+      title: 'Do you Want Delete User?',
+      content: 'Click Cancel to back',
+      onOk() {
+        userServices.deleteUser(id)
+          .then(() => {
+            if (user.id === id) {
+              setUser(null);
+              cookiesHelpers.deleteByName('access_token_cookie')
+              props.history.push('/login')
+            } else {
+              openNotificationWithIcon('success', 'Success', 'Deleted User');
+              fetchUser()
+            }
+          })
+          .catch((err) => {
+            openNotificationWithIcon('error', 'Error', err.response.message);
+          })
+      }
+    })
+  }
 
   const columns = [
     {
@@ -47,15 +88,16 @@ const UserList = (props) => {
     },
     {
       title: 'Action',
-      render: () => {
+      render: (record) => {
 
         return (
           <>
-            <Link to="/"><Icon type="folder-open" style={{ marginLeft: 6, fontSize: 20 }} /></Link>
+            <Link to={`/user/${record.id}`}><Icon type="folder-open" style={{ marginLeft: 6, fontSize: 20 }} /></Link>
             <Link to="/"><Icon type="edit" style={{ color: "#89CC6F", marginLeft: 6, fontSize: 20 }} /></Link>
             <Icon
               type="delete"
               style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
+              onClick={() => handleDeleteUser(record.id)}
             />
           </>
         )
@@ -63,26 +105,9 @@ const UserList = (props) => {
     },
   ];
 
-  const fetchUser = (args = {}) => {
-    setLoading(true);
-    userServices.fetchUsers(args)
-      .then(res => {
-        console.log(res)
-        const pager = { ...pagination };
-        pager.total = res.data.length;
-        setLoading(false);
-        setData(res.data);
-        setPagination(pager)
-      })
-      .catch(() => {
-        setLoading(false);
-        props.history.push('/home');
-      })
-  };
-
   useEffect(() => {
     fetchUser();
-    return (() => { })
+    return () => { }
   }, [])
 
 
@@ -99,7 +124,7 @@ const UserList = (props) => {
     });
   };
 
-  return (user && user.is_admin) ? (
+  return (
     <div style={{
       backgroundColor: '#FFFFFF',
       borderRadius: 5,
@@ -111,7 +136,7 @@ const UserList = (props) => {
           <Title
             level={2}
           >
-            Add New User
+            List User
           </Title>
         </Col>
         <Col span={12}>
@@ -133,12 +158,7 @@ const UserList = (props) => {
         onChange={handleTableChange}
       />
     </div>
-  ) : (
-    <>
-      {toast.error("Sorry. You are not admin")}
-      <Redirect to="/home" />
-    </>
-    )
+  )
 }
 
 export default UserList;
