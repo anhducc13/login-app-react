@@ -12,6 +12,8 @@ import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 const { Password } = Input;
 
@@ -133,6 +135,19 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
+          {/* <GoogleLogin
+            clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
+            buttonText="Login"
+            onSuccess={res => console.log(res)}
+            onFailure={err => console.log(err)}
+            cookiePolicy={'single_host_origin'}
+          />
+          <FacebookLogin
+            appId="438803206963254"
+            autoLoad
+            fields="name,email,picture"
+            callback={res => console.log(res)} 
+          /> */}
           <Form.Item>
             <Button
               type="primary"
