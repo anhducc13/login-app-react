@@ -11,7 +11,6 @@ import './ForgotPassword.scss';
 import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
-import { RULES_USERNAME, RULES_EMAIL } from 'constants/RuleValidators';
 
 
 const ForgotPassword = (props) => {
@@ -24,50 +23,53 @@ const ForgotPassword = (props) => {
     xxl: { span: 6, offset: 9 },
   }
   const [loading, setLoading] = useState(false);
-  const { getFieldDecorator, validateFields, resetFields } = props.form;
+
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [helperUsername, setHelperUsername] = useState("")
+  const [helperEmail, setHelperEmail] = useState("")
+  const [errorText, setErrorText] = useState("")
+
+  const validateInput = () => {
+    if (username === "")
+      setHelperUsername("Please enter username");
+    else
+      setHelperUsername("");
+
+    if (email === "")
+      setHelperEmail("Please enter email")
+    else
+      setHelperEmail("");
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateFields((error, values) => {
-      if (!error) {
-        setLoading(true);
-        const params = {
-          "username": values.username,
-          "email": values.email,
-        }
-        authServices.forgotPasswordUser(params)
-          .then(() => {
-            setLoading(false);
-            openNotificationWithIcon('success', 'Success',
-              `Please check email ${values.email} to receive new password`)
-            props.history.push('/login');
-          })
-          .catch(err => {
-            setLoading(false);
-            if (err && err.response) {
-              const { status } = err.response;
-              if (status === 400) {
-                resetFields();
-                return;
-              }
-              if (status === 404) {
-                props.history.push('/404');
-                return;
-              }
-              if (status === 403) {
-                openNotificationWithIcon('error', 'Error',
-                  'Account has been block. Please try after')
-                return;
-              }
-              if (status > 400 && status < 500) {
-                props.history.push('/403');
-                return;
-              }
-            }
-            props.history.push('/500');
-          })
+    validateInput();
+    setErrorText("");
+    if (username !== "" && email !== "") {
+      const params = {
+        "username": username,
+        "email": email,
       }
-    })
+      authServices.forgotPasswordUser(params)
+        .then(() => {
+          setLoading(false);
+          openNotificationWithIcon('success', 'Success',
+            `Please check email ${email} to receive new password`)
+          props.history.push('/login');
+        })
+        .catch(err => {
+          setLoading(false);
+          if (err && err.response) {
+            const { status, data } = err.response;
+            if (status >= 400 && status < 500) {
+              setErrorText(data.message)
+              return;
+            }
+          }
+          props.history.push('/500');
+        })
+    }
   }
 
 
@@ -85,23 +87,20 @@ const ForgotPassword = (props) => {
           >
             Forgot Password
           </Title>
-          <Form.Item label="E-mail">
-            {getFieldDecorator('email', {
-              rules: RULES_EMAIL,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Input size="large" />
-            )}
+          <Title
+            level={4}
+            type="danger"
+            style={{
+              textAlign: "center"
+            }}
+          >
+            {errorText}
+          </Title>
+          <Form.Item label="E-mail" help={helperEmail} validateStatus={helperEmail && "error"}>
+            <Input size="large" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Username">
-            {getFieldDecorator('username', {
-              rules: RULES_USERNAME,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Input size="large" />
-            )}
+          <Form.Item label="Username" help={helperUsername} validateStatus={helperUsername && "error"}>
+            <Input size="large" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
           </Form.Item>
           <Row>
             <Col style={{ textAlign: "center" }}>
@@ -130,4 +129,4 @@ const ForgotPassword = (props) => {
   );
 };
 
-export default Form.create()(ForgotPassword);
+export default ForgotPassword;

@@ -17,10 +17,11 @@ describe('Forgot Password form validate', () => {
         <ForgotPassword />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="email"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Required")
+      .toBe("Please enter email")
     component.unmount()
   })
 
@@ -30,13 +31,13 @@ describe('Forgot Password form validate', () => {
         <ForgotPassword />
       </MemoryRouter>
     );
-    component.find('input[id="email"]').simulate('change', { target: { value: "ab" } });
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="email"]').simulate('change', { target: { value: "ab" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(1)
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Not format email")
+      .toBe("Please enter username")
     component.unmount()
   })
 
@@ -46,8 +47,8 @@ describe('Forgot Password form validate', () => {
         <ForgotPassword />
       </MemoryRouter>
     );
-    component.find('input[id="email"]').simulate('change', { target: { value: "duc.tt@teko.vn" } });
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="email"]').simulate('change', { target: { value: "d" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "a" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(0)

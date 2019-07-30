@@ -17,10 +17,10 @@ describe('Update Password form validate', () => {
         <UpdatePassword />
       </MemoryRouter>
     );
-    component.find('input[id="password"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Required")
+      .toBe("Please enter password")
     component.unmount()
   })
 
@@ -30,14 +30,14 @@ describe('Update Password form validate', () => {
         <UpdatePassword />
       </MemoryRouter>
     );
-    component.find('input[id="password"]').simulate('change', { target: { value: "ab" } });
-    component.find('input[id="newPassword"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="confirm"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "ab" } });
+    component.find('input[name="new-password"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "a" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
-      .toBe(3)
+      .toBe(2)
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Content upper letter, lower letter and number, no special character")
+      .toBe("Password contain upper letter, lower letter and number, no special character")
     component.unmount()
   })
 
@@ -47,14 +47,14 @@ describe('Update Password form validate', () => {
         <UpdatePassword />
       </MemoryRouter>
     );
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('input[id="newPassword"]').simulate('change', { target: { value: "Anhducc15" } });
-    component.find('input[id="confirm"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "A" } });
+    component.find('input[name="new-password"]').simulate('change', { target: { value: "Anhducc15" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "a" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(1)
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Confirm password not match")
+      .toBe("Password repeat is not match")
     component.unmount()
   })
 
@@ -64,9 +64,9 @@ describe('Update Password form validate', () => {
         <UpdatePassword />
       </MemoryRouter>
     );
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('input[id="newPassword"]').simulate('change', { target: { value: "Anhducc15" } });
-    component.find('input[id="confirm"]').simulate('change', { target: { value: "Anhducc15" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "An" } });
+    component.find('input[name="new-password"]').simulate('change', { target: { value: "Anhducc15" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "Anhducc15" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(0)

@@ -19,10 +19,9 @@ describe('Register form validate', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "" } });
-    component.find('button[type="submit"]').simulate('click');
+    component.find('input[name="username"]').simulate('change', { target: { value: "" } });
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Required")
+      .toBe("Username contain letter and number and not special character")
     component.unmount()
   })
 
@@ -32,14 +31,14 @@ describe('Register form validate', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[id="email"]').simulate('change', { target: { value: "ab" } });
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "a" } });
-    component.find('button[type="submit"]').simulate('click');
+    component.find('input[name="email"]').simulate('change', { target: { value: "ab" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "a" } });
     expect(component.find('div.ant-form-explain').length)
-      .toBe(3)
+      .toBe(2)
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Not format email")
+      .toBe("Email is invalid format")
     component.unmount()
   })
 
@@ -49,11 +48,10 @@ describe('Register form validate', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[id="email"]').simulate('change', { target: { value: "duc.tt@teko.vn" } });
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('input[id="confirm-password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('button[type="submit"]').simulate('click');
+    component.find('input[name="email"]').simulate('change', { target: { value: "duc.tt@teko.vn" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "Anhducc14" } });
     expect(component.find('div.ant-form-explain').length)
       .toBe(0)
     component.unmount();
@@ -74,8 +72,8 @@ describe('Register Page Submit Form', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
     component.find('button[type="submit"]').simulate('click');
     expect(registerSpy)
       .not.toHaveBeenCalled()
@@ -88,10 +86,10 @@ describe('Register Page Submit Form', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[id="email"]').simulate('change', { target: { value: "trantienduc10@gmail.com" } });
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('input[id="confirm-password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="email"]').simulate('change', { target: { value: "trantienduc10@gmail.com" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "Anhducc14" } });
     component.find('button[type="submit"]').simulate('click');
     expect(registerSpy)
       .toHaveBeenCalled()

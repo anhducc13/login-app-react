@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { authServices } from 'services';
 
-export const UserContext = createContext();
+export const UserContext = createContext([]);
 
 export const UserProvider = (props) => {
   const { children } = props

@@ -18,10 +18,10 @@ describe('Login form validate', () => {
         <Login />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Required")
+      .toBe("Please enter username")
     component.unmount()
   })
 
@@ -31,13 +31,13 @@ describe('Login form validate', () => {
         <Login />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(1)
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Required")
+      .toBe("Please enter password")
 
     component.unmount()
   })
@@ -48,8 +48,8 @@ describe('Login form validate', () => {
         <Login />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
     component.find('button[type="submit"]').simulate('click');
     expect(component.find('div.ant-form-explain').length)
       .toBe(0)
@@ -66,34 +66,48 @@ describe('Login Page Submit Form', () => {
     loginSpy = jest.spyOn(authServices, 'loginUser');
   });
 
-  it('Submit login will not call loginUser function after fail validate', () => {
+  it('Submit login will not call loginUser function after fail validate username', () => {
     const component = mount(
       <MemoryRouter>
         <Login />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
     component.find('button[type="submit"]').simulate('click');
     expect(loginSpy).not.toHaveBeenCalled()
     component.unmount()
   })
 
-  it('Submit login will call loginUser function after success validate', () => {
+  it('Submit login will not call loginUser function after fail validate password', () => {
     const component = mount(
       <MemoryRouter>
         <Login />
       </MemoryRouter>
     );
-    component.find('input[id="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[id="password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "" } });
+    component.find('button[type="submit"]').simulate('click');
+    expect(loginSpy).not.toHaveBeenCalled()
+    expect(component.find('h4.ant-typography.ant-typography-danger').length).toBe(1)
+    component.unmount()
+  })
+
+  it('Submit login will call loginUser function after success validate',() => {
+    const component = mount(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+    component.find('input[name="username"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "1" } });
     component.find('button[type="submit"]').simulate('click');
     expect(loginSpy)
       .toHaveBeenCalled()
     expect(loginSpy)
       .toHaveBeenCalledWith({
-        "username": "anhducc14",
-        "password": "Anhducc14"
+        "username": "a",
+        "password": "1"
       })
     component.unmount()
   })

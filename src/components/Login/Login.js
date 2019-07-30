@@ -11,15 +11,12 @@ import './Login.scss';
 import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
-import { RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 import { UserContext } from 'UserContext';
-import { GoogleLogin } from 'react-google-login';
 
 const { Password } = Input;
 
 
 const Login = (props) => {
-  const { history, form } = props;
 
   const bodyLayout = {
     xs: { span: 22, offset: 1 },
@@ -31,52 +28,73 @@ const Login = (props) => {
   }
 
   const [loading, setLoading] = useState(false);
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [helperUsername, setHelperUsername] = useState("")
+  const [helperPassword, setHelperPassword] = useState("")
+  const [errorText, setErrorText] = useState("")
+
   const [, setUser] = useContext(UserContext);
 
-  const { getFieldDecorator, validateFields, resetFields } = form;
+  const validateInput = () => {
+    if (username === "")
+      setHelperUsername("Please enter username");
+    else
+      setHelperUsername("");
+
+    if (password === "")
+      setHelperPassword("Please enter password")
+    else
+      setHelperPassword("");
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateFields((error, values) => {
-      if (!error) {
-        setLoading(true);
-        const params = {
-          "username": values.username,
-          "password": values.password,
-        }
-        authServices.loginUser(params)
-          .then(res => {
-            setLoading(false);
-            const { data } = res;
-            setUser(data);
-            openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
-            history.push('/');
-          })
-          .catch(err => {
-            setLoading(false);
-            if (err && err.response) {
-              const { status } = err.response;
-              if (status === 400) {
-                resetFields();
-                return;
-              }
-              if (status === 404) {
-                history.push('/404');
-                return;
-              }
-              if (status === 403) {
-                openNotificationWithIcon('error', 'error', 'Account has been block. Please try after')
-                return;
-              }
-              if (status > 400 && status < 500) {
-                history.push('/403');
-                return;
-              }
-            }
-            history.push('/500');
-          })
+    validateInput();
+    setErrorText("")
+    if (username !== "" && password !== "") {
+      setLoading(true);
+      const params = {
+        "username": username,
+        "password": password,
       }
-    })
+      authServices.loginUser(params)
+        .then(res => {
+          setLoading(false);
+          const { data } = res;
+          setUser(data);
+          openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
+          props.history.push('/');
+        })
+        .catch(err => {
+          setLoading(false);
+          if (err && err.response) {
+            const { status, data } = err.response;
+            if (status === 400) {
+              setErrorText(data.message)
+              return;
+            }
+            if (status === 404) {
+              props.history.push('/404');
+              return;
+            }
+            if (status === 403) {
+              if (data.message === "Account warning") {
+                setErrorText("You enter wrong password 3 times. 5 times, account will be block")
+                return;
+              }
+              setErrorText("Account has been block. Please try after")
+              return;
+            }
+            if (status > 400 && status < 500) {
+              props.history.push('/403');
+              return;
+            }
+          }
+          props.history.push('/500');
+        })
+    }
   }
 
   return (
@@ -92,23 +110,20 @@ const Login = (props) => {
           >
             Login
           </Title>
-          <Form.Item label="Username">
-            {getFieldDecorator('username', {
-              rules: RULES_USERNAME,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Input size="large" />
-            )}
+          <Title
+            level={4}
+            type="danger"
+            style={{
+              textAlign: "center"
+            }}
+          >
+            {errorText}
+          </Title>
+          <Form.Item label="Username" help={helperUsername} validateStatus={helperUsername && "error"}>
+            <Input size="large" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Password">
-            {getFieldDecorator('password', {
-              rules: RULES_PASSWORD,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Password size="large" />
-            )}
+          <Form.Item label="Password" help={helperPassword} validateStatus={helperPassword && "error"}>
+            <Password size="large" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </Form.Item>
           <Row>
             <Col span={12}>
@@ -118,12 +133,6 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
-          <GoogleLogin
-            clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
-            buttonText="Login"
-            onSuccess={res => console.log(res)}
-            onFailure={error => console.log(error)}
-          />
           <Form.Item>
             <Button
               type="primary"
@@ -146,4 +155,4 @@ const Login = (props) => {
 };
 
 
-export default Form.create()(Login);
+export default Login;

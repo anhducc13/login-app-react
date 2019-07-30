@@ -1,29 +1,154 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Login Page Render should render correctly 1`] = `
-<Login
-  form={
-    Object {
-      "getFieldDecorator": [Function],
-      "getFieldError": [Function],
-      "getFieldInstance": [Function],
-      "getFieldProps": [Function],
-      "getFieldValue": [Function],
-      "getFieldsError": [Function],
-      "getFieldsValue": [Function],
-      "isFieldTouched": [Function],
-      "isFieldValidating": [Function],
-      "isFieldsTouched": [Function],
-      "isFieldsValidating": [Function],
-      "isSubmitting": [Function],
-      "resetFields": [Function],
-      "setFields": [Function],
-      "setFieldsInitialValue": [Function],
-      "setFieldsValue": [Function],
-      "submit": [Function],
-      "validateFields": [Function],
-      "validateFieldsAndScroll": [Function],
+<div
+  className="Login"
+>
+  <Col
+    lg={
+      Object {
+        "offset": 7,
+        "span": 10,
+      }
     }
-  }
-/>
+    md={
+      Object {
+        "offset": 6,
+        "span": 12,
+      }
+    }
+    sm={
+      Object {
+        "offset": 4,
+        "span": 16,
+      }
+    }
+    xl={
+      Object {
+        "offset": 8,
+        "span": 8,
+      }
+    }
+    xs={
+      Object {
+        "offset": 1,
+        "span": 22,
+      }
+    }
+    xxl={
+      Object {
+        "offset": 9,
+        "span": 6,
+      }
+    }
+  >
+    <Form
+      className="form-box"
+      colon={true}
+      hideRequiredMark={false}
+      layout="horizontal"
+      onSubmit={[Function]}
+    >
+      <Title
+        level={2}
+        style={
+          Object {
+            "padding": "5px",
+            "textAlign": "center",
+          }
+        }
+      >
+        Login
+      </Title>
+      <Title
+        level={4}
+        style={
+          Object {
+            "textAlign": "center",
+          }
+        }
+        type="danger"
+      />
+      <FormItem
+        hasFeedback={false}
+        help=""
+        label="Username"
+        validateStatus=""
+      >
+        <Input
+          disabled={false}
+          name="username"
+          onChange={[Function]}
+          size="large"
+          type="text"
+          value=""
+        />
+      </FormItem>
+      <FormItem
+        hasFeedback={false}
+        help=""
+        label="Password"
+        validateStatus=""
+      >
+        <Password
+          action="click"
+          inputPrefixCls="ant-input"
+          name="password"
+          onChange={[Function]}
+          prefixCls="ant-input-password"
+          size="large"
+          value=""
+          visibilityToggle={true}
+        />
+      </FormItem>
+      <Row
+        gutter={0}
+      >
+        <Col
+          span={12}
+        >
+          <Link
+            to="/forgot-password"
+          >
+            Forgot password?
+          </Link>
+        </Col>
+        <Col
+          span={12}
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <Link
+            to="/register"
+          >
+            Don't have an account?
+          </Link>
+        </Col>
+      </Row>
+      <FormItem
+        hasFeedback={false}
+      >
+        <Button
+          block={true}
+          ghost={false}
+          htmlType="submit"
+          loading={false}
+          onClick={[Function]}
+          size="large"
+          style={
+            Object {
+              "marginTop": 10,
+            }
+          }
+          type="primary"
+        >
+          Login
+        </Button>
+      </FormItem>
+    </Form>
+  </Col>
+</div>
 `;

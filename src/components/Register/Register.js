@@ -9,8 +9,8 @@ import {
 import { Link } from 'react-router-dom';
 import './Register.scss';
 import Title from 'antd/lib/typography/Title';
-import { RULES_EMAIL, RULES_USERNAME, RULES_PASSWORD } from 'constants/RuleValidators';
 import { authServices } from 'services';
+import { validatorHelpers } from 'helpers';
 import openNotificationWithIcon from 'helpers/notification';
 
 const { Password } = Input;
@@ -26,47 +26,88 @@ const Register = (props) => {
     xxl: { span: 6, offset: 9 },
   }
   const [loading, setLoading] = useState(false);
-  const { getFieldDecorator, getFieldValue, validateFields, resetFields } = props.form;
+
+  const initState = {
+    value: "",
+    helper: ""
+  }
+
+  const [email, setEmail] = useState(initState);
+  const [username, setUsername] = useState(initState);
+  const [password, setPassword] = useState(initState);
+  const [repeatPassword, setRepeatPassword] = useState(initState);
+
+  const [errorText, setErrorText] = useState("")
+
+  const validateUsername = (value) => {
+    const helper = validatorHelpers.validateUsername(value);
+    setUsername({ value, helper })
+  }
+
+  const validateEmail = (value) => {
+    const helper = validatorHelpers.validateEmail(value);
+    setEmail({ value, helper })
+  }
+
+  const validatePassword = (value) => {
+    const helper = validatorHelpers.validatePassword(value);
+    setPassword({ value, helper })
+  }
+
+  const validateRepeatPassword = (value) => {
+    const helper = value === password.value ? "" : "Password repeat is not match";
+    setRepeatPassword({ value, helper })
+  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateFields((error, values) => {
-      if (!error) {
-        setLoading(true);
-        const params = {
-          "username": values.username,
-          "email": values.email,
-          "password": values.password,
+
+    validateEmail(email.value);
+    validateUsername(username.value);
+    validatePassword(password.value)
+    validateRepeatPassword(repeatPassword.value)
+
+    const canNotSubmit = email.value === "" || email.helper !== ""
+      || username.value === "" || username.helper !== ""
+      || password.value === "" || password.helper !== ""
+      || repeatPassword.value === "" || repeatPassword.helper !== "";
+    if (canNotSubmit) {
+      return;
+    }
+    setLoading(true);
+    const params = {
+      "username": username.value,
+      "email": email.value,
+      "password": password.value,
+    }
+    authServices.registerUser(params)
+      .then(res => {
+        setLoading(false);
+        const { data } = res;
+        openNotificationWithIcon('success', 'Success',
+          `Please verify account in email ${data.email} to login system`)
+        props.history.push('/login');
+      })
+      .catch(err => {
+        setLoading(false);
+        if (err && err.response) {
+          const { status, data } = err.response;
+          if (status === 400) {
+            setErrorText(data.message);
+            return;
+          }
+          if (status === 404) {
+            props.history.push('/404');
+            return;
+          }
+          if (status > 400 && status < 500) {
+            props.history.push('/403');
+            return;
+          }
         }
-        authServices.registerUser(params)
-          .then(res => {
-            setLoading(false);
-            const { data } = res;
-            openNotificationWithIcon('success', 'Success',
-              `Please verify account in email ${data.email} to login system`)
-            props.history.push('/login');
-          })
-          .catch(err => {
-            setLoading(false);
-            if (err && err.response) {
-              const { status } = err.response;
-              if (status === 400) {
-                resetFields();
-                return;
-              }
-              if (status === 404) {
-                props.history.push('/404');
-                return;
-              }
-              if (status > 400 && status < 500) {
-                props.history.push('/403');
-                return;
-              }
-            }
-            props.history.push('/500');
-          })
-      }
-    })
+        props.history.push('/500');
+      })
   }
 
 
@@ -84,50 +125,30 @@ const Register = (props) => {
           >
             Register
           </Title>
-          <Form.Item label="E-mail">
-            {getFieldDecorator('email', {
-              rules: RULES_EMAIL,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Input size="large" />
-            )}
+          <Title
+            level={4}
+            type="danger"
+            style={{
+              textAlign: "center"
+            }}
+          >
+            {errorText}
+          </Title>
+          <Form.Item label="E-mail" help={email.helper} validateStatus={email.helper && "error"}>
+            <Input size="large" name="email" onChange={e => validateEmail(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Username">
-            {getFieldDecorator('username', {
-              rules: RULES_USERNAME,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Input size="large" />
-            )}
+          <Form.Item label="Username" help={username.helper} validateStatus={username.helper && "error"}>
+            <Input size="large" name="username" onChange={e => validateUsername(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Password">
-            {getFieldDecorator('password', {
-              rules: RULES_PASSWORD,
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Password size="large" />
-            )}
+          <Form.Item label="Password" help={password.helper} validateStatus={password.helper && "error"}>
+            <Password size="large" name="password" onChange={e => validatePassword(e.target.value)} />
           </Form.Item>
-          <Form.Item label="Confirm Password">
-            {getFieldDecorator('confirm-password', {
-              rules: [
-                {
-                  required: true,
-                  message: "Required"
-                },
-                {
-                  pattern: new RegExp(getFieldValue('password')),
-                  message: "Confirm password not match"
-                }
-              ],
-              validateFirst: true,
-              validateTrigger: null,
-            })(
-              <Password size="large" />
-            )}
+          <Form.Item
+            label="Repeat Password"
+            help={repeatPassword.helper}
+            validateStatus={repeatPassword.helper && "error"}
+          >
+            <Password size="large" name="repeat-password" onChange={e => validateRepeatPassword(e.target.value)} />
           </Form.Item>
           <Row>
             <Col style={{ textAlign: "center" }}>
@@ -155,4 +176,4 @@ const Register = (props) => {
   );
 };
 
-export default Form.create()(Register);
+export default Register;

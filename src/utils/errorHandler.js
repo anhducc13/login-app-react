@@ -1,9 +1,6 @@
 import openNotificationWithIcon from 'helpers/notification';
 
 const errorHandler = (error) => {
-  const { status } = error.response;
-  if (status === 400)
-    openNotificationWithIcon('error', 'Error', error.response.data.message)
   return Promise.reject(error)
 }
 
