@@ -12,8 +12,6 @@ import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
-import { GoogleLogin } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
 
 const { Password } = Input;
 

@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { Typography, Button } from 'antd';
 import { userServices } from 'services';

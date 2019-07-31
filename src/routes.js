@@ -15,7 +15,7 @@ const routes = [
     component: asyncComponent(() => import('components/User/UserList')),
   },
   {
-    path: '/user/add-user',
+    path: '/user/add',
     exact: true,
     name: 'Add User',
     component: asyncComponent(() => import('components/User/AddUser')),
@@ -25,6 +25,12 @@ const routes = [
     exact: true,
     name: 'User Infomation',
     component: asyncComponent(() => import('components/User/UserInfo')),
+  },
+  {
+    path: '/user/edit/:id',
+    exact: true,
+    name: 'Edit User',
+    component: asyncComponent(() => import('components/User/EditUser')),
   },
   {
     path: '/user/activity/:id',

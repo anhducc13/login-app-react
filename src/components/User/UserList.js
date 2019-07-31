@@ -77,11 +77,11 @@ const UserList = (props) => {
     {
       title: 'Status',
       dataIndex: 'is_active',
-      render: isActive => {
+      render: (isActive, record) => {
         return isActive ? (
-          <Button type="primary" size="small">Active</Button>
+          <Button type="primary" size="small" disabled={record.is_admin}>Active</Button>
         ) : (
-          <Button type="danger" size="small">Inctive</Button>
+          <Button type="danger" size="small" disabled={record.is_admin}>Inctive</Button>
           )
       },
       filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],
@@ -93,12 +93,19 @@ const UserList = (props) => {
         return (
           <>
             <Link to={`/user/${record.id}`}><Icon type="folder-open" style={{ marginLeft: 6, fontSize: 20 }} /></Link>
-            <Link to="/"><Icon type="edit" style={{ color: "#89CC6F", marginLeft: 6, fontSize: 20 }} /></Link>
-            <Icon
-              type="delete"
-              style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
-              onClick={() => handleDeleteUser(record.id)}
-            />
+            {!record.is_admin ? (
+              <>
+                <Link to={`/user/edit/${record.id}`}>
+                  <Icon type="edit" style={{ color: "#89CC6F", marginLeft: 6, fontSize: 20 }} />
+                </Link>
+                <Icon
+                  type="delete"
+                  style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
+                  onClick={() => handleDeleteUser(record.id)}
+                />
+              </>
+            ) : null}
+
           </>
         )
       },
@@ -141,7 +148,7 @@ const UserList = (props) => {
           </Title>
         </Col>
         <Col span={12}>
-          <Link to="/user/add-user" style={{ paddingTop: 5, float: "right" }}>
+          <Link to="/user/add" style={{ paddingTop: 5, float: "right" }}>
             <Button type="primary" icon="plus-square">
               Add User
             </Button>
