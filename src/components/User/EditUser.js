@@ -53,21 +53,21 @@ const EditUser = (props) => {
     phoneNumber: "",
     gender: null,
     birthday: "",
-    avatarName: "",
+    avatarFileName: "",
     avatarFile: null
   }
 
   const [data, setData] = useState(initialData);
-  const [loadingImage, setLoadingImage] = useState(false);
-  const [show, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [avatar, setAvatar] = useState([]);
 
   useEffect(() => {
     userServices.fetchUser(userId)
       .then(res => {
         setData({
           ...data,
+          username: res.username,
           email: res.email,
-          username: res.username
         })
       })
       .catch(err => {
@@ -90,50 +90,51 @@ const EditUser = (props) => {
     })
   }
 
-  const beforeUpload = file => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  const handleRemoveAvatar = () => {
+    setAvatar([])
+    setData({
+      ...data,
+      avatarFileName: "",
+      avatarFile: null,
+    })
+  }
+
+  const handleChangeAvatar = ({ fileList }) => {
+    const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
+    const isLt2M = fileList[0].size / 1024 / 1024 < 2;
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
+    } else if (!isLt2M) {
       message.error('Image must smaller than 2MB!');
+    } else {
+      setData({
+        ...data,
+        avatarFile: fileList[0].originFileObj,
+        avatarFileName: fileList[0].name,
+      })
+      setAvatar(fileList);
     }
-    return isJpgOrPng && isLt2M;
-  }
+  };
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
-
-  const handleChangeImage = info => {
-    setData({
-      ...data,
-      avatarName: "dsvfsdf"
-    })
-    if (info.file.status === 'uploading') {
-      setLoadingImage(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      setLoadingImage(false);
-      console.log(info)
-      // getBase64(info.file.originFileObj, imgUrl => setImageUrl(imgUrl));
-    }
-  }
-
-  const handleRemoveImage = () => {
-    setData({
-      ...data,
-      avatarName: ""
-    })
-  }
 
   const handleSubmit = e => {
+    setLoading(true);
     e.preventDefault();
-    console.log(data)
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+      if (key !== "avatarName" && key !== "avatarFileName" && key !== "email")
+        formData.append(key, data[key])
+    });
+    if (data.avatarFileName)
+      formData.append("avatar", data.avatarFile, data.avatarFileName);
+    
+    userServices.editUser(userId, formData)
+      .then(() => {
+        setLoading(false);
+        openNotificationWithIcon("success", "Success", "Update user success");
+      })
+      .catch(() => {setLoading(false)})
+    
   }
 
   return (
@@ -149,7 +150,7 @@ const EditUser = (props) => {
           marginBottom: 20
         }}
       >
-        Edit User:
+        Edit user:
         {' '}
         {data.username}
       </Title>
@@ -177,25 +178,23 @@ const EditUser = (props) => {
         </Form.Item>
         <Form.Item label="Avatar">
           <Upload
-            name="avatar"
             listType="picture-card"
-            className="avatar-uploader"
-            // showUploadList={false}
-            beforeUpload={beforeUpload}
-            onChange={handleChangeImage}
-            onRemove={handleRemoveImage}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            fileList={avatar}
+            showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
+            beforeUpload={() => false}
+            onRemove={handleRemoveAvatar}
+            onChange={handleChangeAvatar}
           >
-            {!data.avatarName ? (
+            {avatar.length === 0 ? (
               <div>
-                <Icon type={loadingImage ? 'loading' : 'plus'} />
+                <Icon type="plus" />
                 <div className="ant-upload-text">Upload</div>
               </div>
-            ): null}
+            ) : null}
           </Upload>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" block onClick={handleSubmit}>
+          <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
             Save
           </Button>
         </Form.Item>

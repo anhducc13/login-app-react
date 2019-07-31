@@ -12,6 +12,10 @@ const fetchUserActions = ((args) => requestServices.customAxios.get('/admin/user
 
 const addUser = (params) => requestServices.customAxios.post('/admin/user', params).then(res => res.data);
 
+const editUser = (id, data) => requestServices.customAxios
+  .put(`/admin/user/${id}`, data)
+  .then(res => res.data);
+
 const deleteUser = (id) => requestServices.customAxios.delete(`/admin/user/${id}`).then(res => res.data);
 
 export default {
@@ -20,4 +24,5 @@ export default {
   addUser,
   deleteUser,
   fetchUserActions,
+  editUser
 };
