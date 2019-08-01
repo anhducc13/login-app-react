@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { userServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
-import { Typography, Table } from 'antd';
+import { Table } from 'antd';
 
-const { Title } = Typography;
 
 
 const UserAction = (props) => {
@@ -56,6 +55,7 @@ const UserAction = (props) => {
   ];
 
   useEffect(() => {
+    console.log(userId)
     fetchUserAction({
       user_id: userId,
     });
@@ -83,11 +83,6 @@ const UserAction = (props) => {
       padding: 8
     }}
     >
-      <Title
-        level={2}
-      >
-        Activity User
-      </Title>
       <Table
         size="small"
         rowKey={record => record.id}

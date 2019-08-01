@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Typography, Button } from 'antd';
+import { Form, Input, Typography, Button, Alert } from 'antd';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { validatorHelpers } from 'helpers';
@@ -125,15 +125,6 @@ const UpdatePassword = (props) => {
       >
         Update Password
       </Title>
-      <Title
-        level={4}
-        type="danger"
-        style={{
-          textAlign: "center"
-        }}
-      >
-        {errorText}
-      </Title>
       <Form {...formItemLayout}>
         <Form.Item label="Password" help={password.helper} validateStatus={password.helper && "error"}>
           <Password name="password" onChange={(e) => setPassword({ value: e.target.value })} />
@@ -148,6 +139,16 @@ const UpdatePassword = (props) => {
         >
           <Password name="repeat-password" onChange={e => validateRepeatPassword(e.target.value)} />
         </Form.Item>
+        {errorText && (
+          <Form.Item {...tailFormItemLayout}>
+            <Alert
+              message={errorText}
+              type="error"
+              closable
+              showIcon
+            />
+          </Form.Item>
+          )}
         <Form.Item {...tailFormItemLayout}>
           <Button
             type="primary"

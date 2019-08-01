@@ -3,6 +3,7 @@ import {
   Form,
   Input,
   Button,
+  Alert,
   Col,
   Row,
 } from 'antd';
@@ -87,15 +88,14 @@ const ForgotPassword = (props) => {
           >
             Forgot Password
           </Title>
-          <Title
-            level={4}
-            type="danger"
-            style={{
-              textAlign: "center"
-            }}
-          >
-            {errorText}
-          </Title>
+          {errorText && (
+            <Alert
+              message={errorText}
+              type="error"
+              closable
+              showIcon
+            />
+          )}
           <Form.Item label="E-mail" help={helperEmail} validateStatus={helperEmail && "error"}>
             <Input size="large" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </Form.Item>

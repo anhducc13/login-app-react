@@ -58,6 +58,20 @@ const UserList = (props) => {
     })
   }
 
+  const editUser = (id, params) => {
+    const formData = new FormData();
+    Object.keys(params).forEach(key => formData.append(key, params[key]));
+
+    userServices.editUser(id, formData)
+      .then(() => {
+        openNotificationWithIcon('success', 'Success', 'Update success');
+        fetchUser()
+      })
+      .catch((err) => {
+        openNotificationWithIcon('error', 'Error', err.response.message);
+      })
+  }
+
   const columns = [
     {
       title: 'Id',
@@ -79,12 +93,50 @@ const UserList = (props) => {
       dataIndex: 'is_active',
       render: (isActive, record) => {
         return isActive ? (
-          <Button type="primary" size="small" disabled={record.is_admin}>Active</Button>
+          <Button
+            type="primary"
+            size="small"
+            disabled={record.is_admin}
+            onClick={() => {editUser(record.id, { isActive: false })}}
+          >
+            Active
+          </Button>
         ) : (
-          <Button type="danger" size="small" disabled={record.is_admin}>Inctive</Button>
+          <Button
+            type="danger"
+            size="small"
+            disabled={record.is_admin}
+            onClick={() => {editUser(record.id, { isActive: true })}}
+          >
+            Inctive
+          </Button>
           )
       },
       filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],
+    },
+    {
+      title: 'Role',
+      dataIndex: 'is_admin',
+      render: (isAdmin, record) => {
+        return isAdmin ? (
+          <Button
+            type="primary"
+            size="small"
+            disabled={record.is_admin}
+          >
+            Admin
+          </Button>
+        ) : (
+          <Button
+            type="danger"
+            size="small"
+            disabled={record.is_admin}
+            onClick={() => {editUser(record.id, { isAdmin: true })}}
+          >
+            Not admin
+          </Button>
+          )
+      },
     },
     {
       title: 'Action',
@@ -92,18 +144,15 @@ const UserList = (props) => {
 
         return (
           <>
-            <Link to={`/user/${record.id}`}><Icon type="folder-open" style={{ marginLeft: 6, fontSize: 20 }} /></Link>
+            <Link to={`/user/edit/${record.id}`}>
+              <Icon type="container" style={{ marginLeft: 6, fontSize: 20 }} />
+            </Link>
             {!record.is_admin ? (
-              <>
-                <Link to={`/user/edit/${record.id}`}>
-                  <Icon type="edit" style={{ color: "#89CC6F", marginLeft: 6, fontSize: 20 }} />
-                </Link>
-                <Icon
-                  type="delete"
-                  style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
-                  onClick={() => handleDeleteUser(record.id)}
-                />
-              </>
+              <Icon
+                type="delete"
+                style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
+                onClick={() => handleDeleteUser(record.id)}
+              />
             ) : null}
 
           </>

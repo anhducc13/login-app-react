@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import {
   Form,
   Input,
+  Alert,
   Button,
   Col,
   Row,
@@ -110,15 +111,14 @@ const Login = (props) => {
           >
             Login
           </Title>
-          <Title
-            level={4}
-            type="danger"
-            style={{
-              textAlign: "center"
-            }}
-          >
-            {errorText}
-          </Title>
+          {errorText && (
+            <Alert
+              message={errorText}
+              type="error"
+              closable
+              showIcon
+            />
+          )}
           <Form.Item label="Username" help={helperUsername} validateStatus={helperUsername && "error"}>
             <Input size="large" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
           </Form.Item>

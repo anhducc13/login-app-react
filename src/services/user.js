@@ -1,7 +1,7 @@
 // @flow
 import { requestServices } from 'services';
 
-const fetchUsers = (args) => requestServices.customAxios.get('/admin/users', { params: args })
+const fetchUsers = (args) => requestServices.customAxios.get('/admin/users/', { params: args })
   .then(res => res.data.data);
 
 const fetchUser = (id) => requestServices.customAxios.get(`/admin/user/${id}`)
