@@ -213,6 +213,7 @@ const UserList = (props) => {
         pagination={pagination}
         loading={loading}
         onChange={handleTableChange}
+        scroll={{ x: 1000 }}
       />
     </div>
   )

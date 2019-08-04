@@ -5,7 +5,7 @@ export const UserContext = createContext([]);
 
 export const UserProvider = (props) => {
   const { children } = props
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   const fetchUser = async() => {
     try {

@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Layout, Icon, Dropdown, Menu, Avatar, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import './CustomHeader.scss';
 import { UserContext } from 'UserContext';
 import openNotificationWithIcon from 'helpers/notification';
-import { authServices } from 'services';
+import { authServices, firebaseServices } from 'services';
 
 
 const { Header } = Layout;
@@ -13,6 +13,15 @@ const { confirm } = Modal;
 const CustomHeader = (props) => {
   const { isCollapse, collapseSider } = props;
   const [user, setUser] = useContext(UserContext);
+  const [avatarSrc, setAvatarSrc] = useState("")
+
+  useEffect(() => {
+    if (user && user.avatar) {
+      firebaseServices.getDownloadURL(user.avatar)
+        .then(src => setAvatarSrc(src))
+        .catch(() => setAvatarSrc(""))
+    }
+  }, [user])
 
   const handleLogout = () => {
     confirm({
@@ -28,10 +37,15 @@ const CustomHeader = (props) => {
           .catch((err) => {
             if(err && err.response) {
               const { status, data } = err.response;
+              if(status === 401) {
+                openNotificationWithIcon('error', 'Error', "Session expired. Please login to continue")
+                props.history.push('/login');
+                return;
+              } 
               if(status === 404) {
                 props.history.push('/404');
                 return;
-              } 
+              }
               if (status > 400 && status < 500) {
                 openNotificationWithIcon('error', 'Error', data.message)
                 props.history.push('/403');
@@ -75,7 +89,10 @@ const CustomHeader = (props) => {
             marginRight: 20
           }}
         >
-          <Avatar src="https://image2.tienphong.vn/w665/Uploaded/2019/pcgycivo/2019_04_19/1_bqtz.jpg" />
+          <Avatar
+            icon={avatarSrc ? '' : 'user'}
+            src={avatarSrc || ""}
+          />
           {'  '}
           <span
             style={{

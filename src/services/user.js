@@ -18,11 +18,15 @@ const editUser = (id, data) => requestServices.customAxios
 
 const deleteUser = (id) => requestServices.customAxios.delete(`/admin/user/${id}`).then(res => res.data);
 
+const fetchRoles = () => requestServices.customAxios.get('/admin/roles/')
+  .then(res => res.data.data)
+
 export default {
   fetchUser,
   fetchUsers,
   addUser,
   deleteUser,
   fetchUserActions,
-  editUser
+  editUser,
+  fetchRoles,
 };

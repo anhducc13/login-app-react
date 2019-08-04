@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import uuidv4 from 'uuid/v4';
 
 const appFirebase = firebase.initializeApp({
     apiKey: "AIzaSyAcjbrVQyOOlY-SadQ8TWmldob2SjH5trM",
@@ -7,20 +8,24 @@ const appFirebase = firebase.initializeApp({
     storageBucket: "ductt-217110.appspot.com",
 });
 
-// const uploadAvatar = (file) => 
+const uploadFile = (blob) => {
+    const filename = Date.now().toString() + uuidv4();
+    const ref = appFirebase.storage().ref(`avatar/${filename}`);
+    return ref.put(blob).then(snapshot => snapshot.metadata.fullPath)
+}
 
-export default appFirebase;
+const getDownloadURL = (refName) => {
+    const ref = appFirebase.storage().ref();
+    return ref.child(refName).getDownloadURL();
+}
 
-// const ref = firebase.storage().ref();
-// const file = document.querySelector('#photo').files[0]
-// const name = file.name;
-// const metadata = {
-//   contentType: file.type
-// };
-// const task = ref.child(name).put(file, metadata);
-// task
-//   .then(snapshot => snapshot.ref.getDownloadURL())
-//   .then((url) => {
-//     console.log(url);
-//   })
-//   .catch(console.error);
+const deleteFile = (refName) => {
+    const ref = appFirebase.storage().ref();
+    return ref.child(refName).delete();
+}
+
+export default {
+    uploadFile,
+    getDownloadURL,
+    deleteFile,
+};

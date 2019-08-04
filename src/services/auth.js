@@ -8,6 +8,9 @@ const forgotPasswordUser = (payload) => requestServices.customAxios.post('/auth/
 
 const updatePasswordUser = (payload) => requestServices.customAxios.post('/auth/updatePassword',payload)
 
+const editProfileUser = (formData) => requestServices.customAxios.post('/auth/editProfile',formData)
+  .then(res => res.data.data)
+
 const logoutUser = () => requestServices.customAxios.get('/auth/logout')
 
 const currentUser = () => requestServices.customAxios.get('/auth/currentUser').then(res => res.data)
@@ -19,5 +22,6 @@ const currentUser = () => requestServices.customAxios.get('/auth/currentUser').t
     registerUser,
     forgotPasswordUser,
     logoutUser,
-    updatePasswordUser
+    updatePasswordUser,
+    editProfileUser
   };

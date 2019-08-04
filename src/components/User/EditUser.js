@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-boolean-value */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import moment from 'moment';
 import {
   Form,
@@ -10,17 +10,16 @@ import {
   Alert,
   Checkbox,
   DatePicker,
-  Upload,
-  Icon,
   Button,
   Typography,
-  message
+  Select,
 } from 'antd';
 import { userServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import UserAction from './UserAction';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 
 const EditUser = (props) => {
@@ -60,18 +59,23 @@ const EditUser = (props) => {
     isActive: false,
     gender: null,
     birthday: "",
-    avatar: "",
   }
 
+  const selectRole = useRef(null);
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState([]);
   const [errorText, setErrorText] = useState("");
   const [openUserAction, setOpenUserAction] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [defaultRoles, setDefaultRoles] = useState([])
 
   useEffect(() => {
     userServices.fetchUser(userId)
       .then(res => {
+        const list = [];
+        res.roles.map(val => list.push(val.id))
+        setDefaultRoles(list)
+
         setData({
           ...data,
           id: res.id,
@@ -83,12 +87,15 @@ const EditUser = (props) => {
           phoneNumber: res.phone_number,
           gender: res.gender,
           birthday: res.birthday,
-          avatar: res.avatar,
+          roles: list,
         })
       })
       .catch(err => {
         openNotificationWithIcon('error', 'Error', err.response.data.message);
       })
+    userServices.fetchRoles()
+      .then(result => setRoles(result))
+      .catch(() => setRoles([]))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -106,41 +113,23 @@ const EditUser = (props) => {
     })
   }
 
-  const handleChangeAvatar = ({ fileList }) => {
-    const isJpgOrPng = fileList[0].type === 'image/jpeg' || fileList[0].type === 'image/png';
-    const isLt2M = fileList[0].size / 1024 / 1024 < 2;
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    } else if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    } else {
-      setData({
-        ...data,
-        avatarFile: fileList[0].originFileObj,
-        avatarFileName: fileList[0].name,
-      })
-      setAvatar(fileList);
-    }
-  };
-
-
   const handleSubmit = e => {
     setLoading(true);
+    setErrorText("")
     e.preventDefault();
     const formData = new FormData();
     Object.keys(data).forEach(key => {
-      if (key !== "username" && key !== "email" && key !== "avatar" && key !== "id")
+      if (key !== "username" && key !== "email" && key !== "id")
         formData.append(key, data[key])
     });
-    if (avatar.length !== 0)
-      formData.append("avatar", avatar[0].originFileObj, avatar[0].name);
 
     userServices.editUser(userId, formData)
       .then(() => {
         setLoading(false);
         openNotificationWithIcon("success", "Success", "Update user success");
+        props.history.push('/list-user');
       })
-      .catch((err) => { 
+      .catch((err) => {
         setLoading(false);
         if (err && err.response) {
           const { response } = err;
@@ -155,7 +144,6 @@ const EditUser = (props) => {
         }
         props.history.push('/500');
       })
-
   }
 
   return (
@@ -180,71 +168,70 @@ const EditUser = (props) => {
         <UserAction userId={data.id} {...props} />
       ) : null}
       {data.username && !data.isAdmin && (
-      <Form {...formItemLayout}>
-        <Form.Item label="E-mail">
-          <Input disabled value={data.email} name="email" />
-        </Form.Item>
-        <Form.Item label="Username">
-          <Input disabled name="username" value={data.username} onChange={handleChangeInput} />
-        </Form.Item>
-        <Form.Item label="Fullname">
-          <Input name="fullname" value={data.fullname} onChange={handleChangeInput} />
-        </Form.Item>
-        <Form.Item label="Phone Number">
-          <Input name="phoneNumber" value={data.phoneNumber} onChange={handleChangeInput} />
-        </Form.Item>
-        <Form.Item label="Gender">
-          <Radio.Group name="gender" value={data.gender} onChange={handleChangeInput}>
-            <Radio value={true}>Male</Radio>
-            <Radio value={false}>Female</Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item label="Admin">
-          <Checkbox checked={data.isAdmin} onChange={(e) => setData({ ...data, isAdmin: e.target.checked })} />
-        </Form.Item>
-        <Form.Item label="Active">
-          <Checkbox checked={data.isActive} onChange={(e) => setData({ ...data, isActive: e.target.checked })} />
-        </Form.Item>
-        <Form.Item label="Birthday">
-          <DatePicker
-            name="birthday"
-            onChange={handleChangeDatePicker}
-            defaultValue={data.birthday ? moment(new Date(data.birthday)) : moment()}
-          />
-        </Form.Item>
-        <Form.Item label="Avatar">
-          <Upload
-            listType="picture-card"
-            fileList={avatar}
-            showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
-            beforeUpload={() => false}
-            onRemove={() => setAvatar([])}
-            onChange={handleChangeAvatar}
-          >
-            {avatar.length === 0 ? (
-              <div>
-                <Icon type="plus" />
-                <div className="ant-upload-text">Upload</div>
-              </div>
-            ) : null}
-          </Upload>
-        </Form.Item>
-        {errorText && (
-          <Form.Item {...tailFormItemLayout}>
-            <Alert
-              message={errorText}
-              type="error"
-              closable
-              showIcon
+        <Form {...formItemLayout}>
+          <Form.Item label="E-mail">
+            <Input disabled value={data.email} name="email" />
+          </Form.Item>
+          <Form.Item label="Username">
+            <Input disabled name="username" value={data.username} onChange={handleChangeInput} />
+          </Form.Item>
+          <Form.Item label="Fullname">
+            <Input name="fullname" value={data.fullname} onChange={handleChangeInput} />
+          </Form.Item>
+          <Form.Item label="Phone Number">
+            <Input name="phoneNumber" value={data.phoneNumber} onChange={handleChangeInput} />
+          </Form.Item>
+          <Form.Item label="Gender">
+            <Radio.Group name="gender" value={data.gender} onChange={handleChangeInput}>
+              <Radio value={true}>Male</Radio>
+              <Radio value={false}>Female</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="Admin">
+            <Checkbox checked={data.isAdmin} onChange={(e) => setData({ ...data, isAdmin: e.target.checked })} />
+          </Form.Item>
+          <Form.Item label="Roles">
+            <Select
+              ref={selectRole}
+              mode="multiple"
+              style={{ width: '100%' }}
+              defaultValue={defaultRoles}
+              placeholder="Please select roles"
+              onChange={(value) => setData({ ...data, roles: value})}
+            >
+              {roles.map(val => (
+                <Option key={val.id} value={val.id}>
+                  {val.role_name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Active">
+            <Checkbox checked={data.isActive} onChange={(e) => setData({ ...data, isActive: e.target.checked })} />
+          </Form.Item>
+          <Form.Item label="Birthday">
+            <DatePicker
+              name="birthday"
+              onChange={handleChangeDatePicker}
+              defaultValue={data.birthday ? moment(new Date(data.birthday)) : null}
             />
           </Form.Item>
+          {errorText && (
+            <Form.Item {...tailFormItemLayout}>
+              <Alert
+                message={errorText}
+                type="error"
+                closable
+                showIcon
+              />
+            </Form.Item>
           )}
-        <Form.Item {...tailFormItemLayout}>
-          <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
-            Save
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item {...tailFormItemLayout}>
+            <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
+              Save
+            </Button>
+          </Form.Item>
+        </Form>
       )}
     </div>
   )
