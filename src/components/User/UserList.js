@@ -96,8 +96,8 @@ const UserList = (props) => {
           <Button
             type="primary"
             size="small"
-            disabled={record.is_admin}
-            onClick={() => {editUser(record.id, { isActive: false })}}
+            disabled={record.id === user.id}
+            onClick={() => { editUser(record.id, { isActive: false }) }}
           >
             Active
           </Button>
@@ -105,8 +105,8 @@ const UserList = (props) => {
           <Button
             type="danger"
             size="small"
-            disabled={record.is_admin}
-            onClick={() => {editUser(record.id, { isActive: true })}}
+            disabled={record.id === user.id}
+            onClick={() => { editUser(record.id, { isActive: true }) }}
           >
             Inctive
           </Button>
@@ -115,39 +115,15 @@ const UserList = (props) => {
       filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],
     },
     {
-      title: 'Role',
-      dataIndex: 'is_admin',
-      render: (isAdmin, record) => {
-        return isAdmin ? (
-          <Button
-            type="primary"
-            size="small"
-            disabled={record.is_admin}
-          >
-            Admin
-          </Button>
-        ) : (
-          <Button
-            type="danger"
-            size="small"
-            disabled={record.is_admin}
-            onClick={() => {editUser(record.id, { isAdmin: true })}}
-          >
-            Not admin
-          </Button>
-          )
-      },
-    },
-    {
       title: 'Action',
       render: (record) => {
 
         return (
           <>
             <Link to={`/user/edit/${record.id}`}>
-              <Icon type="container" style={{ marginLeft: 6, fontSize: 20 }} />
+              <Icon type="edit" style={{ marginLeft: 6, fontSize: 20 }} />
             </Link>
-            {!record.is_admin ? (
+            {!(record.id === user.id) ? (
               <Icon
                 type="delete"
                 style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
@@ -205,16 +181,18 @@ const UserList = (props) => {
         </Col>
       </Row>
 
-      <Table
-        size="small"
-        rowKey={record => record.id}
-        columns={columns}
-        dataSource={data}
-        pagination={pagination}
-        loading={loading}
-        onChange={handleTableChange}
-        scroll={{ x: 1000 }}
-      />
+      {user && (
+        <Table
+          size="small"
+          rowKey={record => record.id}
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={{ x: 1000 }}
+        />
+      )}
     </div>
   )
 }

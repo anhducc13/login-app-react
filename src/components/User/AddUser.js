@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { Form, Input, Typography, Button, Checkbox } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Typography, Button, Select, Alert } from 'antd';
 import { userServices } from 'services';
-import { RULES_USERNAME, RULES_EMAIL } from 'constants/RuleValidators';
 import openNotificationWithIcon from 'helpers/notification';
+import { validatorHelpers } from 'helpers';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 
 const AddUser = (props) => {
-  const { form, history } = props;
+  const { history } = props;
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -38,51 +39,84 @@ const AddUser = (props) => {
     },
   };
 
+  const initState = {
+    value: "",
+    helper: ""
+  }
+
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState(initState);
+  const [username, setUsername] = useState(initState);
+  const [roles, setRoles] = useState([]);
+  const [userRoles, setUserRoles] = useState([])
+  const [errorText, setErrorText] = useState("");
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    userServices.fetchRoles()
+      .then(res => setRoles(res))
+      .catch(err => {
+        openNotificationWithIcon('error', 'Error', err.response.data.message);
+      })
+  }, [])
 
-  const { getFieldDecorator, validateFields, resetFields } = form;
+  const validateEmail = (value) => {
+    const helper = validatorHelpers.validateEmail(value);
+    setEmail({ value, helper })
+  }
+  const validateUsername = (value) => {
+    const helper = validatorHelpers.validateUsername(value);
+    setUsername({ value, helper })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateFields((error, values) => {
-      if (!error) {
-        setLoading(true);
-        const params = {
-          "email": values.email,
-          "username": values.username,
-          "is_admin": isAdmin
+
+    validateEmail(email.value);
+    validateUsername(username.value);
+
+    const canNotSubmit = email.value === "" || email.helper !== ""
+      || username.value === "" || username.helper !== ""
+    if (canNotSubmit) {
+      return;
+    }
+    setLoading(true);
+    setErrorText("")
+    const params = {
+      "email": email.value,
+      "username": username.value,
+      "roles": userRoles
+    }
+    userServices.addUser(params)
+      .then(() => {
+        setLoading(false);
+        openNotificationWithIcon('success', 'Success', 'Create user success!')
+        history.push('/list-user');
+      })
+      .catch(err => {
+        setLoading(false);
+        if (err && err.response) {
+          const { status, data } = err.response;
+          if (status === 400) {
+            setErrorText(data.message)
+            return;
+          }
+          if (status === 401) {
+            openNotificationWithIcon('error', 'Error', 'Expired session. Please login to continue');
+            history.push('/login');
+            return;
+          }
+          if (status === 404) {
+            history.push('/404');
+            return;
+          }
+          if (status > 400 && status < 500) {
+            openNotificationWithIcon('error', 'Error', data.message)
+            history.push('/403');
+            return;
+          }
         }
-        userServices.addUser(params)
-          .then(() => {
-            setLoading(false);
-            openNotificationWithIcon('success', 'Success', 'Create user success!')
-            history.push('/list-user');
-          })
-          .catch(err => {
-            setLoading(false);
-            if (err && err.response) {
-              const { status, data } = err.response;
-              if (status === 400) {
-                resetFields();
-                setIsAdmin(false)
-                return;
-              }
-              if (status === 404) {
-                history.push('/404');
-                return;
-              }
-              if (status > 400 && status < 500) {
-                openNotificationWithIcon('error', 'Error', data.message)
-                history.push('/403');
-                return;
-              }
-            }
-            history.push('/500');
-          })
-      }
-    })
+        history.push('/500');
+      })
   }
 
   return (
@@ -101,29 +135,37 @@ const AddUser = (props) => {
         Add New User
       </Title>
       <Form {...formItemLayout}>
-        <Form.Item label="E-mail">
-          {getFieldDecorator('email', {
-            rules: RULES_EMAIL,
-            validateFirst: true,
-            validateTrigger: null,
-          })(
-            <Input />
-          )}
+        <Form.Item label="E-mail" help={email.helper} validateStatus={email.helper && "error"}>
+          <Input name="email" onChange={e => setEmail({ ...email, value: e.target.value })} />
         </Form.Item>
-        <Form.Item label="Username">
-          {getFieldDecorator('username', {
-            rules: RULES_USERNAME,
-            validateFirst: true,
-            validateTrigger: null,
-          })(
-            <Input />
-          )}
+        <Form.Item label="Username" help={username.helper} validateStatus={username.helper && "error"}>
+          <Input name="username" onChange={e => setUsername({ ...username, value: e.target.value })} />
         </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Checkbox checked={isAdmin} onChange={() => setIsAdmin(!isAdmin)}>
-            Admin
-          </Checkbox>
+        <Form.Item label="Roles">
+          <Select
+            mode="multiple"
+            style={{ width: '100%' }}
+            defaultValue={[]}
+            placeholder="Please select roles"
+            onChange={(value) => setUserRoles(value)}
+          >
+            {roles.map(val => (
+              <Option key={val.id} value={val.id}>
+                {val.role_name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
+        {errorText && (
+          <Form.Item {...tailFormItemLayout}>
+            <Alert
+              message={errorText}
+              type="error"
+              closable
+              showIcon
+            />
+          </Form.Item>
+        )}
         <Form.Item {...tailFormItemLayout}>
           <Button
             type="primary"
@@ -141,6 +183,6 @@ const AddUser = (props) => {
   )
 }
 
-export default Form.create()(AddUser);
+export default AddUser;
 
 

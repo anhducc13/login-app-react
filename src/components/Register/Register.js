@@ -66,8 +66,8 @@ const Register = (props) => {
 
     validateEmail(email.value);
     validateUsername(username.value);
-    validatePassword(password.value)
-    validateRepeatPassword(repeatPassword.value)
+    validatePassword(password.value);
+    validateRepeatPassword(repeatPassword.value);
 
     const canNotSubmit = email.value === "" || email.helper !== ""
       || username.value === "" || username.helper !== ""

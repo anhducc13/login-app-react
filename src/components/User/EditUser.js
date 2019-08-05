@@ -167,7 +167,7 @@ const EditUser = (props) => {
       {openUserAction ? (
         <UserAction userId={data.id} {...props} />
       ) : null}
-      {data.username && !data.isAdmin && (
+      {data.username && (
         <Form {...formItemLayout}>
           <Form.Item label="E-mail">
             <Input disabled value={data.email} name="email" />
