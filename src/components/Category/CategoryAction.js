@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { userServices } from 'services';
+import { categoryServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { Table } from 'antd';
 
 
 
-const UserAction = (props) => {
-  const { userId } = props;
+const CategoryAction = (props) => {
+  const { categoryId } = props;
 
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const fetchUserAction = (args = {}) => {
+  const fetchCategoryActions = (args = {}) => {
     setLoading(true);
-    userServices.fetchUserActions(args)
+    categoryServices.fetchCategoryActions(args)
       .then(res => {
         const pager = Object.assign(pagination);
         pager.total = res.total;
@@ -40,16 +40,11 @@ const UserAction = (props) => {
     },
     {
       title: 'Action',
-      dataIndex: 'action_name',
-      filters: [
-        { text: 'CREATED', value: 'CREATED' },
-        { text: 'LOGIN', value: 'LOGIN' },
-        { text: 'LOGOUT', value: 'LOGOUT' },
-        { text: 'FORGOT PASWORD', value: 'FORGOT_PASWORD' },
-        { text: 'UPDATE PASWORD', value: 'UPDATE_PASSWORD' },
-        { text: 'LOCK', value: 'LOCK' },
-
-      ],
+      dataIndex: 'log_name',
+    },
+    {
+      title: 'Username',
+      dataIndex: 'username',
     },
     {
       title: 'Time',
@@ -59,8 +54,8 @@ const UserAction = (props) => {
   ];
 
   useEffect(() => {
-    fetchUserAction({
-      user_id: userId,
+    fetchCategoryActions({
+      category_id: categoryId,
     });
     return (() => { })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,8 +65,8 @@ const UserAction = (props) => {
     const pager = Object.assign(_pagination);
     pager.current = _pagination.current;
     setPagination(pager)
-    fetchUserAction({
-      user_id: userId,
+    fetchCategoryActions({
+      category_id: categoryId,
       _page: pager.current,
       _limit: pager.pageSize,
       _order: _sorter.order,
@@ -99,4 +94,4 @@ const UserAction = (props) => {
   )
 }
 
-export default UserAction;
+export default CategoryAction;

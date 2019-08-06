@@ -41,15 +41,18 @@ export default function AvatarUser(props) {
 
   const changeAvatarUser = () => {
     setLoading(true);
-    crop.current.cropper.getCroppedCanvas().toBlob(file => {
-      firebaseServices.uploadFile(file)
+    crop.current.cropper.getCroppedCanvas({
+      width: 300,
+      height: 300,
+    }).toBlob(file => {
+      firebaseServices.uploadFileImage(file)
         .then(path => {
           const formData = new FormData()
           formData.append("avatar", path)
           authServices.editProfileUser(formData)
             .then((data) => {
               if(user.avatar)
-                firebaseServices.deleteFile(user.avatar)
+                firebaseServices.deleteFileImage(user.avatar)
                   .then(() => { })
                   .catch(() => { })
               setUser(data);

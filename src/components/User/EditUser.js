@@ -91,7 +91,12 @@ const EditUser = (props) => {
         })
       })
       .catch(err => {
-        openNotificationWithIcon('error', 'Error', err.response.data.message);
+        if (err && err.response) {
+          openNotificationWithIcon('error', 'Error', err.response.data.message);
+          props.history.push('/home');
+          return;
+        }
+        props.history.push('/500');
       })
     userServices.fetchRoles()
       .then(result => setRoles(result))
@@ -135,6 +140,11 @@ const EditUser = (props) => {
           const { response } = err;
           if (response.status === 400) {
             setErrorText(response.data.message)
+            return;
+          }
+          if (response.status === 401) {
+            openNotificationWithIcon('error', 'Error', "Expired session. Please login to continue");
+            props.history.push('/login');
             return;
           }
           if (response.status > 400 && response.status < 500) {

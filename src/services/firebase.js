@@ -8,7 +8,7 @@ const appFirebase = firebase.initializeApp({
     storageBucket: "ductt-217110.appspot.com",
 });
 
-const uploadFile = (blob) => {
+const uploadFileImage = (blob) => {
     const filename = Date.now().toString() + uuidv4();
     const ref = appFirebase.storage().ref(`avatar/${filename}`);
     return ref.put(blob).then(snapshot => snapshot.metadata.fullPath)
@@ -19,13 +19,13 @@ const getDownloadURL = (refName) => {
     return ref.child(refName).getDownloadURL();
 }
 
-const deleteFile = (refName) => {
+const deleteFileImage = (refName) => {
     const ref = appFirebase.storage().ref();
     return ref.child(refName).delete();
 }
 
 export default {
-    uploadFile,
+    uploadFileImage,
     getDownloadURL,
-    deleteFile,
+    deleteFileImage,
 };

@@ -6,6 +6,7 @@ import { categoryServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import CategoryAction from './CategoryAction';
 
 
 const { Title } = Typography;
@@ -44,6 +45,7 @@ const EditCategory = (props) => {
   const [description, setDescription] = useState("");
   const [isActive, setIsActive] = useState(null);
   const [errorText, setErrorText] = useState("");
+  const [openCategoryAction, setOpenCategoryAction] = useState(false);
 
   const categoryId = props.match.params.id;
 
@@ -91,6 +93,11 @@ const EditCategory = (props) => {
             setErrorText(response.data.message)
             return;
           }
+          if (response.status === 401) {
+            openNotificationWithIcon('error', 'Error', "Expired session. Please login to continue");
+            props.history.push('/login');
+            return;
+          }
           if (response.status > 400 && response.status < 500) {
             props.history.push('/403');
             return;
@@ -115,6 +122,10 @@ const EditCategory = (props) => {
       >
         Edit category
       </Title>
+      <Button type="link" onClick={() => setOpenCategoryAction(!openCategoryAction)}>View all activity</Button>
+      {openCategoryAction ? (
+        <CategoryAction categoryId={category && category.id} {...props} />
+      ) : null}
       {category && (
         <Form {...formItemLayout}>
           <Form.Item label="User created">

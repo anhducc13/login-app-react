@@ -30,8 +30,12 @@ const UserList = (props) => {
       })
       .catch((err) => {
         setLoading(false);
-        openNotificationWithIcon('error', 'Error', err.response.data.message);
-        props.history.push('/home');
+        if (err && err.response) {
+          openNotificationWithIcon('error', 'Error', err.response.data.message);
+          props.history.push('/home');
+          return;
+        }
+        props.history.push('/500');
       })
   };
 
@@ -68,7 +72,12 @@ const UserList = (props) => {
         fetchUser()
       })
       .catch((err) => {
-        openNotificationWithIcon('error', 'Error', err.response.message);
+        if (err && err.response) {
+          openNotificationWithIcon('error', 'Error', err.response.data.message);
+          props.history.push('/home');
+          return;
+        }
+        props.history.push('/500');
       })
   }
 

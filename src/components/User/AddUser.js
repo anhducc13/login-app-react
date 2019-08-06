@@ -55,7 +55,12 @@ const AddUser = (props) => {
     userServices.fetchRoles()
       .then(res => setRoles(res))
       .catch(err => {
-        openNotificationWithIcon('error', 'Error', err.response.data.message);
+        if (err && err.response) {
+          openNotificationWithIcon('error', 'Error', err.response.data.message);
+          props.history.push('/home');
+          return;
+        }
+        props.history.push('/500');
       })
   }, [])
 
