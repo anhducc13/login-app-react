@@ -89,7 +89,6 @@ describe('Login Page Submit Form', () => {
     component.find('input[name="password"]').simulate('change', { target: { value: "" } });
     component.find('button[type="submit"]').simulate('click');
     expect(loginSpy).not.toHaveBeenCalled()
-    expect(component.find('h4.ant-typography.ant-typography-danger').length).toBe(1)
     component.unmount()
   })
 

@@ -31,7 +31,7 @@ const CustomSider = ({ collapse }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="3">
-          <Link to="/">
+          <Link to="/list-category">
             <Icon type="folder" />
             <span>Category</span>
           </Link>

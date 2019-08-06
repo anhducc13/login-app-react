@@ -60,15 +60,6 @@ exports[`Login Page Render should render correctly 1`] = `
       >
         Login
       </Title>
-      <Title
-        level={4}
-        style={
-          Object {
-            "textAlign": "center",
-          }
-        }
-        type="danger"
-      />
       <FormItem
         hasFeedback={false}
         help=""

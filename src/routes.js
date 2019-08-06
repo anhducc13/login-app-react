@@ -44,6 +44,24 @@ const routes = [
     name: 'Update Password',
     component: asyncComponent(() => import('components/Profile/UpdatePassword')),
   },
+  {
+    path: '/list-category',
+    exact: true,
+    name: 'List Category',
+    component: asyncComponent(() => import('components/Category/CategoryList')),
+  },
+  {
+    path: '/category/add',
+    exact: true,
+    name: 'Add Category',
+    component: asyncComponent(() => import('components/Category/AddCategory')),
+  },
+  {
+    path: '/category/edit/:id',
+    exact: true,
+    name: 'Edit Category',
+    component: asyncComponent(() => import('components/Category/EditCategory')),
+  },
 ];
 
 export default routes;

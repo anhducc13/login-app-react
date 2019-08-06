@@ -60,15 +60,6 @@ exports[`Register Page Render should render correctly 1`] = `
       >
         Register
       </Title>
-      <Title
-        level={4}
-        style={
-          Object {
-            "textAlign": "center",
-          }
-        }
-        type="danger"
-      />
       <FormItem
         hasFeedback={false}
         help=""

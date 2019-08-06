@@ -48,9 +48,10 @@ export default function AvatarUser(props) {
           formData.append("avatar", path)
           authServices.editProfileUser(formData)
             .then((data) => {
-              firebaseServices.deleteFile(user.avatar)
-                .then(() => { })
-                .catch(() => { })
+              if(user.avatar)
+                firebaseServices.deleteFile(user.avatar)
+                  .then(() => { })
+                  .catch(() => { })
               setUser(data);
               openNotificationWithIcon("success", "Success", "Change Avatar Success");
             })
