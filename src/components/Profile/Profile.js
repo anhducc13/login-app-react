@@ -76,7 +76,9 @@ export default function Profile(props) {
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
+    setErrorText("")
     const formData = new FormData();
+    formData.append("username", user.username || "")
     formData.append("fullname", user.fullname || "")
     formData.append("phoneNumber", user.phone_number || "")
     formData.append("gender", user.gender || "")
@@ -146,14 +148,14 @@ export default function Profile(props) {
                   <Input disabled value={user.email} name="email" />
                 </Form.Item>
                 <Form.Item label="Username">
-                  <Input disabled name="username" value={user.username} onChange={handleChangeInput} />
+                  <Input name="username" value={user.username} onChange={handleChangeInput} />
                 </Form.Item>
                 <Form.Item label="Roles">
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}
                     value={defaultRoles}
-                    placeholder="Please select roles"
+                    placeholder="No role"
                     disabled
                   >
                     {user.roles.map(val => (

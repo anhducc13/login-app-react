@@ -6,6 +6,7 @@ import {
   Button,
   Col,
   Row,
+  Icon
 } from 'antd';
 import { Link } from 'react-router-dom';
 import './Login.scss';
@@ -14,7 +15,7 @@ import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
 import { GoogleLogin } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 const { Password } = Input;
 
@@ -172,18 +173,6 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
-          <GoogleLogin
-            clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
-            buttonText="Login"
-            onSuccess={handleLoginGoogle}
-            onFailure={err => console.log(err)}
-            cookiePolicy="single_host_origin"
-          />
-          <FacebookLogin
-            appId="438803206963254"
-            fields="name,email,picture"
-            callback={res => console.log(res)}
-          />
           <Form.Item>
             <Button
               type="primary"
@@ -198,6 +187,50 @@ const Login = (props) => {
             >
               Login
             </Button>
+          </Form.Item>
+          <Form.Item>
+            <div className="social-divider">
+              <span>or</span>
+            </div>
+            <GoogleLogin
+              clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
+              onSuccess={handleLoginGoogle}
+              onFailure={err => console.log(err)}
+              cookiePolicy="single_host_origin"
+              render={renderProps => (
+                <Button
+                  block
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  size="large"
+                  style={{
+                    marginTop: 10,
+                  }}
+                >
+                  <Icon type="google" style={{ color: '#FF7255', fontSize: 20 }} />
+                  Login with Google
+                </Button>
+              )}
+            />
+            {/* <FacebookLogin
+              appId="438803206963254"
+              callback={res => console.log(res)}
+              render={renderProps => (
+                <Button
+                  htmlType="submit"
+                  block
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  size="large"
+                  style={{
+                    marginTop: 10,
+                  }}
+                >
+                  <Icon type="facebook" style={{ color: '#4267B2', fontSize: 20 }} />
+                  Login with Facebook
+                </Button>
+              )}
+            /> */}
           </Form.Item>
         </Form>
       </Col>

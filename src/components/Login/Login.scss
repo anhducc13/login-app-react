@@ -21,3 +21,16 @@
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
   flex-direction: column;
 }
+
+.social-divider {
+  width: 90%;
+  text-align: center;
+  border-bottom: 1px solid #979faf;
+  line-height: 0.1em;
+  margin: 5px auto 20px;
+}
+
+.social-divider span {
+  background: #fff;
+  padding: 0 10px;
+}
