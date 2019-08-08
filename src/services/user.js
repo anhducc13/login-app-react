@@ -10,7 +10,7 @@ const fetchUser = (id) => requestServices.customAxios.get(`/user/${id}`)
 const fetchUserActions = ((args) => requestServices.customAxios.get('/user/activity', { params: args })
   .then(res => res.data.data));
 
-const addUser = (params) => requestServices.customAxios.post('/user', params).then(res => res.data);
+const addUser = (params) => requestServices.customAxios.post('/user/', params).then(res => res.data);
 
 const editUser = (id, data) => requestServices.customAxios
   .put(`/user/${id}`, data)

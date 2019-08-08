@@ -9,7 +9,6 @@ const { Option } = Select;
 
 
 const AddUser = (props) => {
-  const { history } = props;
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -95,7 +94,7 @@ const AddUser = (props) => {
       .then(() => {
         setLoading(false);
         openNotificationWithIcon('success', 'Success', 'Create user success!')
-        history.push('/list-user');
+        props.history.push('/list-user');
       })
       .catch(err => {
         setLoading(false);
@@ -107,20 +106,20 @@ const AddUser = (props) => {
           }
           if (status === 401) {
             openNotificationWithIcon('error', 'Error', 'Expired session. Please login to continue');
-            history.push('/login');
+            props.history.push('/login');
             return;
           }
           if (status === 404) {
-            history.push('/404');
+            props.history.push('/404');
             return;
           }
           if (status > 400 && status < 500) {
             openNotificationWithIcon('error', 'Error', data.message)
-            history.push('/403');
+            props.history.push('/403');
             return;
           }
         }
-        history.push('/500');
+        props.history.push('/500');
       })
   }
 

@@ -112,13 +112,13 @@ const UserList = (props) => {
           </Button>
         ) : (
           <Button
-            type="danger"
-            size="small"
-            disabled={record.id === user.id}
-            onClick={() => { editUser(record.id, { isActive: true }) }}
-          >
-            Inctive
-          </Button>
+              type="danger"
+              size="small"
+              disabled={record.id === user.id}
+              onClick={() => { editUser(record.id, { isActive: true }) }}
+            >
+              Inctive
+            </Button>
           )
       },
       filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],
@@ -127,21 +127,18 @@ const UserList = (props) => {
       title: 'Action',
       render: (record) => {
 
-        return (
+        return !(record.id === user.id) ? (
           <>
             <Link to={`/user/edit/${record.id}`}>
               <Icon type="edit" style={{ marginLeft: 6, fontSize: 20 }} />
             </Link>
-            {!(record.id === user.id) ? (
-              <Icon
-                type="delete"
-                style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
-                onClick={() => handleDeleteUser(record.id)}
-              />
-            ) : null}
-
+            <Icon
+              type="delete"
+              style={{ color: "#F70F1E", marginLeft: 6, fontSize: 20, cursor: "pointer" }}
+              onClick={() => handleDeleteUser(record.id)}
+            />
           </>
-        )
+        ) : null
       },
     },
   ];

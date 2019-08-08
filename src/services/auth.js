@@ -2,6 +2,8 @@ import { requestServices } from 'services';
 
 const loginUser = (payload) => requestServices.customAxios.post('/auth/login',payload).then(res => res.data)
 
+const loginGoogle = (payload) => requestServices.customAxios.post('/auth/loginGoogle/',payload).then(res => res.data)
+
 const registerUser = (payload) => requestServices.customAxios.post('/auth/register',payload).then(res => res.data)
 
 const forgotPasswordUser = (payload) => requestServices.customAxios.post('/auth/forgotPassword',payload)
@@ -18,6 +20,7 @@ const currentUser = () => requestServices.customAxios.get('/auth/currentUser').t
 
   export default {
     loginUser,
+    loginGoogle,
     currentUser,
     registerUser,
     forgotPasswordUser,

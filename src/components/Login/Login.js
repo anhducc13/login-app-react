@@ -13,6 +13,8 @@ import Title from 'antd/lib/typography/Title';
 import { authServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 const { Password } = Input;
 
@@ -98,6 +100,43 @@ const Login = (props) => {
     }
   }
 
+  const handleLoginGoogle = (res) => {
+    const params = {
+      'tokenId': `${res.tokenId}`
+    }
+    authServices.loginGoogle(params)
+      .then(res => {
+        setLoading(false);
+        const { data } = res;
+        setUser(data);
+        openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
+        props.history.push('/');
+      })
+      .catch(err => {
+        setLoading(false);
+        if (err && err.response) {
+          const { status, data } = err.response;
+          if (status === 400) {
+            setErrorText(data.message)
+            return;
+          }
+          if (status === 404) {
+            props.history.push('/404');
+            return;
+          }
+          if (status === 403) {
+            setErrorText(data.message)
+            return;
+          }
+          if (status > 400 && status < 500) {
+            props.history.push('/403');
+            return;
+          }
+        }
+        props.history.push('/500');
+      })
+  }
+
   return (
     <div className="Login">
       <Col {...bodyLayout}>
@@ -133,19 +172,18 @@ const Login = (props) => {
               <Link to="/register">Don't have an account?</Link>
             </Col>
           </Row>
-          {/* <GoogleLogin
+          <GoogleLogin
             clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
             buttonText="Login"
-            onSuccess={res => console.log(res)}
+            onSuccess={handleLoginGoogle}
             onFailure={err => console.log(err)}
-            cookiePolicy={'single_host_origin'}
+            cookiePolicy="single_host_origin"
           />
           <FacebookLogin
             appId="438803206963254"
-            autoLoad
             fields="name,email,picture"
-            callback={res => console.log(res)} 
-          /> */}
+            callback={res => console.log(res)}
+          />
           <Form.Item>
             <Button
               type="primary"
