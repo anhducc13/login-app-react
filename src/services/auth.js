@@ -10,7 +10,7 @@ const forgotPasswordUser = (payload) => requestServices.customAxios.post('/auth/
 
 const updatePasswordUser = (payload) => requestServices.customAxios.post('/auth/updatePassword',payload)
 
-const editProfileUser = (formData) => requestServices.customAxios.post('/auth/editProfile',formData)
+const editProfileUser = (payload) => requestServices.customAxios.post('/auth/editProfile',payload)
   .then(res => res.data.data)
 
 const logoutUser = () => requestServices.customAxios.get('/auth/logout')

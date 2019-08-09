@@ -49,46 +49,17 @@ const EditUser = (props) => {
 
   const userId = props.match.params.id;
 
-  const initialData = {
-    id: null,
-    email: "",
-    username: "",
-    fullname: "",
-    phoneNumber: "",
-    isAdmin: false,
-    isActive: false,
-    gender: null,
-    birthday: "",
-  }
-
   const selectRole = useRef(null);
-  const [data, setData] = useState(initialData);
+  const [dataUser, setDataUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [openUserAction, setOpenUserAction] = useState(false);
   const [roles, setRoles] = useState([]);
-  const [defaultRoles, setDefaultRoles] = useState([])
 
   useEffect(() => {
     userServices.fetchUser(userId)
       .then(res => {
-        const list = [];
-        res.roles.map(val => list.push(val.id))
-        setDefaultRoles(list)
-
-        setData({
-          ...data,
-          id: res.id,
-          username: res.username,
-          email: res.email,
-          isActive: res.is_active,
-          isAdmin: res.is_admin,
-          fullname: res.fullname,
-          phoneNumber: res.phone_number,
-          gender: res.gender,
-          birthday: res.birthday,
-          roles: list,
-        })
+        setDataUser(res)
       })
       .catch(err => {
         if (err && err.response) {
@@ -105,16 +76,16 @@ const EditUser = (props) => {
   }, [])
 
   const handleChangeInput = e => {
-    setData({
-      ...data,
+    setDataUser({
+      ...dataUser,
       [e.target.name]: e.target.value
     })
   }
 
   const handleChangeDatePicker = (time, timeString) => {
-    setData({
-      ...data,
-      birthday: timeString
+    setDataUser({
+      ...dataUser,
+      birthday: new Date(timeString)
     })
   }
 
@@ -122,13 +93,17 @@ const EditUser = (props) => {
     setLoading(true);
     setErrorText("")
     e.preventDefault();
-    const formData = new FormData();
-    Object.keys(data).forEach(key => {
-      if (key !== "username" && key !== "email" && key !== "id")
-        formData.append(key, data[key])
-    });
 
-    userServices.editUser(userId, formData)
+    const payload = {
+      'fullname': dataUser.fullname,
+      'phone_number': dataUser.phone_number,
+      'gender': dataUser.gender,
+      'birthday': dataUser.birthday,
+      'is_active': dataUser.is_active,
+      'roles': dataUser.roles
+    }
+
+    userServices.editUser(userId, payload)
       .then(() => {
         setLoading(false);
         openNotificationWithIcon("success", "Success", "Update user success");
@@ -156,7 +131,7 @@ const EditUser = (props) => {
       })
   }
 
-  return (
+  return dataUser && (
     <div style={{
       backgroundColor: '#FFFFFF',
       borderRadius: 5,
@@ -171,78 +146,73 @@ const EditUser = (props) => {
       >
         Edit user:
         {' '}
-        {data.username}
+        {dataUser.username}
       </Title>
       <Button type="link" onClick={() => setOpenUserAction(!openUserAction)}>View all activity</Button>
       {openUserAction ? (
-        <UserAction userId={data.id} {...props} />
+        <UserAction userId={dataUser.id} {...props} />
       ) : null}
-      {data.username && (
-        <Form {...formItemLayout}>
-          <Form.Item label="E-mail">
-            <Input disabled value={data.email} name="email" />
-          </Form.Item>
-          <Form.Item label="Username">
-            <Input disabled name="username" value={data.username} onChange={handleChangeInput} />
-          </Form.Item>
-          <Form.Item label="Fullname">
-            <Input name="fullname" value={data.fullname} onChange={handleChangeInput} />
-          </Form.Item>
-          <Form.Item label="Phone Number">
-            <Input name="phoneNumber" value={data.phoneNumber} onChange={handleChangeInput} />
-          </Form.Item>
-          <Form.Item label="Gender">
-            <Radio.Group name="gender" value={data.gender} onChange={handleChangeInput}>
-              <Radio value={true}>Male</Radio>
-              <Radio value={false}>Female</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Admin">
-            <Checkbox checked={data.isAdmin} onChange={(e) => setData({ ...data, isAdmin: e.target.checked })} />
-          </Form.Item>
-          <Form.Item label="Roles">
-            <Select
-              ref={selectRole}
-              mode="multiple"
-              style={{ width: '100%' }}
-              defaultValue={defaultRoles}
-              placeholder="Please select roles"
-              onChange={(value) => setData({ ...data, roles: value})}
-            >
-              {roles.map(val => (
-                <Option key={val.id} value={val.id}>
-                  {val.role_name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Active">
-            <Checkbox checked={data.isActive} onChange={(e) => setData({ ...data, isActive: e.target.checked })} />
-          </Form.Item>
-          <Form.Item label="Birthday">
-            <DatePicker
-              name="birthday"
-              onChange={handleChangeDatePicker}
-              defaultValue={data.birthday ? moment(new Date(data.birthday)) : null}
+      <Form {...formItemLayout}>
+        <Form.Item label="E-mail">
+          <Input disabled value={dataUser.email} name="email" />
+        </Form.Item>
+        <Form.Item label="Username">
+          <Input disabled name="username" value={dataUser.username} />
+        </Form.Item>
+        <Form.Item label="Fullname">
+          <Input name="fullname" value={dataUser.fullname} onChange={handleChangeInput} />
+        </Form.Item>
+        <Form.Item label="Phone Number">
+          <Input name="phone_number" value={dataUser.phone_number} onChange={handleChangeInput} />
+        </Form.Item>
+        <Form.Item label="Gender">
+          <Radio.Group name="gender" value={dataUser.gender} onChange={handleChangeInput}>
+            <Radio value={true}>Male</Radio>
+            <Radio value={false}>Female</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item label="Roles">
+          <Select
+            ref={selectRole}
+            mode="multiple"
+            style={{ width: '100%' }}
+            value={dataUser.roles}
+            placeholder="Please select roles"
+            onChange={(value) => setDataUser({ ...dataUser, roles: value })}
+          >
+            {roles.map(val => (
+              <Option key={val.id} value={val.id}>
+                {val.role_name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Active">
+          <Checkbox checked={dataUser.is_active} onChange={(e) => setDataUser({ ...dataUser, is_active: e.target.checked })} />
+        </Form.Item>
+        <Form.Item label="Birthday">
+          <DatePicker
+            name="birthday"
+            onChange={handleChangeDatePicker}
+            defaultValue={dataUser.birthday ? moment(new Date(dataUser.birthday)) : null}
+          />
+        </Form.Item>
+        {errorText && (
+          <Form.Item {...tailFormItemLayout}>
+            <Alert
+              message={errorText}
+              type="error"
+              closable
+              showIcon
             />
           </Form.Item>
-          {errorText && (
-            <Form.Item {...tailFormItemLayout}>
-              <Alert
-                message={errorText}
-                type="error"
-                closable
-                showIcon
-              />
-            </Form.Item>
-          )}
-          <Form.Item {...tailFormItemLayout}>
-            <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
-              Save
-            </Button>
-          </Form.Item>
-        </Form>
-      )}
+        )}
+        <Form.Item {...tailFormItemLayout}>
+          <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
+            Save
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   )
 }

@@ -47,9 +47,7 @@ export default function AvatarUser(props) {
     }).toBlob(file => {
       firebaseServices.uploadFileImage(file)
         .then(path => {
-          const formData = new FormData()
-          formData.append("avatar", path)
-          authServices.editProfileUser(formData)
+          authServices.editProfileUser({ avatar: path })
             .then((data) => {
               if(user.avatar)
                 firebaseServices.deleteFileImage(user.avatar)

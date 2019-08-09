@@ -13,7 +13,7 @@ import {
   Select,
 } from 'antd';
 import { Link } from 'react-router-dom';
-import { authServices } from 'services';
+import { authServices, userServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
 import AvatarUser from './AvatarUser';
@@ -48,43 +48,50 @@ export default function Profile(props) {
   };
 
   const [user, setUser] = useContext(UserContext);
+  const [dataUser, setDataUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const [defaultRoles, setDefaultRoles] = useState([])
+  const [roles, setRoles] = useState([]);
 
   useEffect(() => {
-    const listRole = []
-    if(user && user.roles)
-      user.roles.map(val => listRole.push(val.id))
-    setDefaultRoles(listRole)
+    setDataUser(user);
+    userServices.fetchRoles()
+      .then(result => setRoles(result))
+      .catch(() => setRoles([]))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   const handleChangeInput = e => {
-    setUser({
-      ...user,
+    setDataUser({
+      ...dataUser,
       [e.target.name]: e.target.value
     })
   }
 
   const handleChangeDatePicker = (time, timeString) => {
-    setUser({
-      ...user,
-      birthday: timeString
+    setDataUser({
+      ...dataUser,
+      birthday: new Date(timeString)
     })
   }
 
   const handleSubmit = e => {
     e.preventDefault();
-    setLoading(true);
     setErrorText("")
-    const formData = new FormData();
-    formData.append("username", user.username || "")
-    formData.append("fullname", user.fullname || "")
-    formData.append("phoneNumber", user.phone_number || "")
-    formData.append("gender", user.gender || "")
-    formData.append("birthday", user.birthday || "")
+    if (dataUser.username === "") {
+      setErrorText("Please enter username");
+      return;
+    }
+    setLoading(true);
+    const payload = {
+      'username': dataUser.username,
+      'fullname': dataUser.fullname,
+      'phone_number': dataUser.phone_number,
+      'gender': dataUser.gender,
+      'birthday': new Date(dataUser.birthday),
+    }
 
-    authServices.editProfileUser(formData)
+    authServices.editProfileUser(payload)
       .then((data) => {
         setUser(data);
         setLoading(false);
@@ -140,25 +147,25 @@ export default function Profile(props) {
         </Col>
       </Row>
       <Row>
-        {user && (
+        {dataUser && roles.length && (
           <>
             <Col sm={{ span: 24 }} md={{ span: 16 }}>
               <Form {...formItemLayout} style={{ marginTop: 10 }}>
                 <Form.Item label="E-mail">
-                  <Input disabled value={user.email} name="email" />
+                  <Input disabled value={dataUser.email} name="email" />
                 </Form.Item>
                 <Form.Item label="Username">
-                  <Input name="username" value={user.username} onChange={handleChangeInput} />
+                  <Input name="username" value={dataUser.username} onChange={handleChangeInput} />
                 </Form.Item>
                 <Form.Item label="Roles">
                   <Select
                     mode="multiple"
                     style={{ width: '100%' }}
-                    value={defaultRoles}
+                    value={dataUser.roles}
                     placeholder="No role"
                     disabled
                   >
-                    {user.roles.map(val => (
+                    {roles.map(val => (
                       <Option key={val.id} value={val.id}>
                         {val.role_name}
                       </Option>
@@ -166,21 +173,21 @@ export default function Profile(props) {
                   </Select>
                 </Form.Item>
                 <Form.Item label="Fullname">
-                  <Input name="fullname" value={user.fullname} onChange={handleChangeInput} />
+                  <Input name="fullname" value={dataUser.fullname} onChange={handleChangeInput} />
                 </Form.Item>
                 <Form.Item label="Phone Number">
-                  <Input name="phone_number" value={user.phone_number} onChange={handleChangeInput} />
+                  <Input name="phone_number" value={dataUser.phone_number} onChange={handleChangeInput} />
                 </Form.Item>
                 <Form.Item label="Gender">
-                  <Radio.Group name="gender" value={user.gender} onChange={handleChangeInput}>
-                    <Radio value={true}>Male</Radio>
+                  <Radio.Group name="gender" value={dataUser.gender} onChange={handleChangeInput}>
+                    <Radio value>Male</Radio>
                     <Radio value={false}>Female</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item label="Birthday">
                   <DatePicker
                     name="birthday"
-                    defaultValue={user.birthday ? moment(new Date(user.birthday)) : null}
+                    defaultValue={dataUser.birthday ? moment(new Date(dataUser.birthday)) : null}
                     onChange={handleChangeDatePicker}
                   />
                 </Form.Item>
@@ -202,7 +209,7 @@ export default function Profile(props) {
 
             </Col>
             <Col sm={{ span: 24 }} md={{ span: 8 }}>
-              <AvatarUser avatar={user.avatar} {...props} />
+              <AvatarUser avatar={dataUser.avatar} {...props} />
             </Col>
           </>
         )}

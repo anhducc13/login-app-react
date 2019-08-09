@@ -12,8 +12,8 @@ const fetchUserActions = ((args) => requestServices.customAxios.get('/user/activ
 
 const addUser = (params) => requestServices.customAxios.post('/user/', params).then(res => res.data);
 
-const editUser = (id, data) => requestServices.customAxios
-  .put(`/user/${id}`, data)
+const editUser = (id, payload) => requestServices.customAxios
+  .put(`/user/${id}`, payload)
   .then(res => res.data);
 
 const deleteUser = (id) => requestServices.customAxios.delete(`/user/${id}`).then(res => res.data);
