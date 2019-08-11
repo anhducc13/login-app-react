@@ -63,10 +63,7 @@ const UserList = (props) => {
   }
 
   const editUser = (id, params) => {
-    const formData = new FormData();
-    Object.keys(params).forEach(key => formData.append(key, params[key]));
-
-    userServices.editUser(id, formData)
+    userServices.editUser(id, params)
       .then(() => {
         openNotificationWithIcon('success', 'Success', 'Update success');
         fetchUser()
@@ -106,19 +103,19 @@ const UserList = (props) => {
             type="primary"
             size="small"
             disabled={record.id === user.id}
-            onClick={() => { editUser(record.id, { isActive: false }) }}
+            onClick={() => { editUser(record.id, { "is_active": false }) }}
           >
             Active
           </Button>
         ) : (
           <Button
-              type="danger"
-              size="small"
-              disabled={record.id === user.id}
-              onClick={() => { editUser(record.id, { isActive: true }) }}
-            >
-              Inctive
-            </Button>
+            type="danger"
+            size="small"
+            disabled={record.id === user.id}
+            onClick={() => { editUser(record.id, { "is_active": true }) }}
+          >
+            Inctive
+          </Button>
           )
       },
       filters: [{ text: 'Active', value: true }, { text: 'Inactive', value: false }],

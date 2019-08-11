@@ -64,9 +64,8 @@ const Login = (props) => {
         "password": password,
       }
       authServices.loginUser(params)
-        .then(res => {
+        .then(data => {
           setLoading(false);
-          const { data } = res;
           setUser(data);
           openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
           props.history.push('/');
@@ -106,9 +105,8 @@ const Login = (props) => {
       'tokenId': `${res.tokenId}`
     }
     authServices.loginGoogle(params)
-      .then(res => {
+      .then(data => {
         setLoading(false);
-        const { data } = res;
         setUser(data);
         openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
         props.history.push('/');
@@ -193,7 +191,7 @@ const Login = (props) => {
               <span>or</span>
             </div>
             <GoogleLogin
-              clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
+              clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE}
               onSuccess={handleLoginGoogle}
               onFailure={err => console.log(err)}
               cookiePolicy="single_host_origin"
@@ -212,25 +210,6 @@ const Login = (props) => {
                 </Button>
               )}
             />
-            {/* <FacebookLogin
-              appId="438803206963254"
-              callback={res => console.log(res)}
-              render={renderProps => (
-                <Button
-                  htmlType="submit"
-                  block
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  size="large"
-                  style={{
-                    marginTop: 10,
-                  }}
-                >
-                  <Icon type="facebook" style={{ color: '#4267B2', fontSize: 20 }} />
-                  Login with Facebook
-                </Button>
-              )}
-            /> */}
           </Form.Item>
         </Form>
       </Col>

@@ -4,7 +4,7 @@ import { categoryServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import SimpleEditor from 'utils/RichTextBox';
 
 const { Title } = Typography;
 
@@ -115,10 +115,13 @@ const AddCategory = (props) => {
             }}
             onChange={(event, editor) => setDescription(editor.getData())}
             config={{
-              toolbar: [ 'heading', '|', 'bold', 'italic', 'bulletedList',
-              'numberedList', 'blockQuote', '|', 'undo', 'redo', ]
+              toolbar: ['heading', '|', 'bold', 'italic', 'bulletedList',
+                'numberedList', 'blockQuote', '|', 'undo', 'redo',]
             }}
           />
+        </Form.Item>
+        <Form.Item label="Test">
+          <SimpleEditor {...props} />
         </Form.Item>
         {errorText && (
           <Form.Item {...tailFormItemLayout}>

@@ -19,6 +19,7 @@ import { UserContext } from 'UserContext';
 import AvatarUser from './AvatarUser';
 
 
+
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -115,7 +116,7 @@ export default function Profile(props) {
       })
   }
 
-  return (
+  return dataUser && roles.length && (
     <div style={{
       backgroundColor: '#FFFFFF',
       borderRadius: 5,
@@ -147,72 +148,68 @@ export default function Profile(props) {
         </Col>
       </Row>
       <Row>
-        {dataUser && roles.length && (
-          <>
-            <Col sm={{ span: 24 }} md={{ span: 16 }}>
-              <Form {...formItemLayout} style={{ marginTop: 10 }}>
-                <Form.Item label="E-mail">
-                  <Input disabled value={dataUser.email} name="email" />
-                </Form.Item>
-                <Form.Item label="Username">
-                  <Input name="username" value={dataUser.username} onChange={handleChangeInput} />
-                </Form.Item>
-                <Form.Item label="Roles">
-                  <Select
-                    mode="multiple"
-                    style={{ width: '100%' }}
-                    value={dataUser.roles}
-                    placeholder="No role"
-                    disabled
-                  >
-                    {roles.map(val => (
-                      <Option key={val.id} value={val.id}>
-                        {val.role_name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-                <Form.Item label="Fullname">
-                  <Input name="fullname" value={dataUser.fullname} onChange={handleChangeInput} />
-                </Form.Item>
-                <Form.Item label="Phone Number">
-                  <Input name="phone_number" value={dataUser.phone_number} onChange={handleChangeInput} />
-                </Form.Item>
-                <Form.Item label="Gender">
-                  <Radio.Group name="gender" value={dataUser.gender} onChange={handleChangeInput}>
-                    <Radio value>Male</Radio>
-                    <Radio value={false}>Female</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                <Form.Item label="Birthday">
-                  <DatePicker
-                    name="birthday"
-                    defaultValue={dataUser.birthday ? moment(new Date(dataUser.birthday)) : null}
-                    onChange={handleChangeDatePicker}
-                  />
-                </Form.Item>
-                {errorText && (
-                  <Form.Item {...tailFormItemLayout}>
-                    <Alert
-                      message={errorText}
-                      type="error"
-                      showIcon
-                    />
-                  </Form.Item>
-                )}
-                <Form.Item {...tailFormItemLayout}>
-                  <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
-                    Save
-                  </Button>
-                </Form.Item>
-              </Form>
+        <Col sm={{ span: 24 }} md={{ span: 16 }}>
+          <Form {...formItemLayout} style={{ marginTop: 10 }}>
+            <Form.Item label="E-mail">
+              <Input disabled value={dataUser.email} name="email" />
+            </Form.Item>
+            <Form.Item label="Username">
+              <Input name="username" value={dataUser.username} onChange={handleChangeInput} />
+            </Form.Item>
+            <Form.Item label="Roles">
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                value={dataUser.roles}
+                placeholder="No role"
+                disabled
+              >
+                {roles.map(val => (
+                  <Option key={val.id} value={val.id}>
+                    {val.role_name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Fullname">
+              <Input name="fullname" value={dataUser.fullname} onChange={handleChangeInput} />
+            </Form.Item>
+            <Form.Item label="Phone Number">
+              <Input name="phone_number" value={dataUser.phone_number} onChange={handleChangeInput} />
+            </Form.Item>
+            <Form.Item label="Gender">
+              <Radio.Group name="gender" value={dataUser.gender} onChange={handleChangeInput}>
+                <Radio value>Male</Radio>
+                <Radio value={false}>Female</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="Birthday">
+              <DatePicker
+                name="birthday"
+                defaultValue={dataUser.birthday ? moment(new Date(dataUser.birthday)) : null}
+                onChange={handleChangeDatePicker}
+              />
+            </Form.Item>
+            {errorText && (
+              <Form.Item {...tailFormItemLayout}>
+                <Alert
+                  message={errorText}
+                  type="error"
+                  showIcon
+                />
+              </Form.Item>
+            )}
+            <Form.Item {...tailFormItemLayout}>
+              <Button loading={loading} type="primary" htmlType="submit" block onClick={handleSubmit}>
+                Save
+              </Button>
+            </Form.Item>
+          </Form>
 
-            </Col>
-            <Col sm={{ span: 24 }} md={{ span: 8 }}>
-              <AvatarUser avatar={dataUser.avatar} {...props} />
-            </Col>
-          </>
-        )}
+        </Col>
+        <Col sm={{ span: 24 }} md={{ span: 8 }}>
+          <AvatarUser avatar={dataUser.avatar} {...props} />
+        </Col>
       </Row>
     </div>
   )

@@ -9,8 +9,8 @@ export const UserProvider = (props) => {
 
   const fetchUser = async() => {
     try {
-      const response = await authServices.currentUser()
-      setUser(response.data)
+      const data = await authServices.currentUser()
+      setUser(data)
     } catch (err) {
       //
     }

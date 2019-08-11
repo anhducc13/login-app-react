@@ -83,9 +83,8 @@ const Register = (props) => {
       "password": password.value,
     }
     authServices.registerUser(params)
-      .then(res => {
+      .then(data => {
         setLoading(false);
-        const { data } = res;
         openNotificationWithIcon('success', 'Success',
           `Please verify account in email ${data.email} to login system`)
         props.history.push('/login');
