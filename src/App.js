@@ -2,15 +2,33 @@ import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import './App.scss';
-import asyncComponent from "utils/asyncComponent";
+import CustomLoadable from 'utils/CustomLoadable';
 import PrivateRouter from 'utils/PrivateRouter';
-import PageError from 'components/PageError';
+// import PageError from 'components/PageError';
 import { toast } from 'react-toastify';
 import { UserProvider } from 'UserContext';
 
 toast.configure();
 
 const browserHistory = createBrowserHistory();
+
+const Login = CustomLoadable({
+  loader: () => import('components/Login'),
+})
+const Register = CustomLoadable({
+  loader: () => import('components/Register'),
+})
+const ForgotPassword = CustomLoadable({
+  loader: () => import('components/ForgotPassword'),
+})
+const DefaultLayout = CustomLoadable({
+  loader: () => import('components/DefaultLayout'),
+})
+const PageError = CustomLoadable({
+  loader: () => import('components/PageError'),
+})
+
+
 
 function App() {
   return (
@@ -21,19 +39,19 @@ function App() {
             exact
             path="/login"
             name="Login Page"
-            component={asyncComponent(() => import('components/Login'))}
+            component={Login}
           />
           <Route
             exact
             path="/register"
             name="Register Page"
-            component={asyncComponent(() => import('components/Register'))}
+            component={Register}
           />
           <Route
             exact
             path="/forgot-password"
             name="Forgot Password Page"
-            component={asyncComponent(() => import('components/ForgotPassword'))}
+            component={ForgotPassword}
           />
           <Route
             exact
@@ -56,7 +74,7 @@ function App() {
           <PrivateRouter
             path="/"
             name="Home"
-            component={asyncComponent(() => import('components/DefaultLayout'))}
+            component={DefaultLayout}
           />
         </Switch>
       </Router>

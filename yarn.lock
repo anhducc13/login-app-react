@@ -3438,24 +3438,6 @@ css-loader@2.1.1:
     postcss-value-parser "^3.3.0"
     schema-utils "^1.0.0"
 
-css-loader@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.2.0.tgz#bb570d89c194f763627fcf1f80059c6832d009b2"
-  integrity sha512-QTF3Ud5H7DaZotgdcJjGMvyDj5F3Pn1j/sC6VBEOVp94cbwqyIBdcs/quzj4MC1BKQSrTpQznegH/5giYbhnCQ==
-  dependencies:
-    camelcase "^5.3.1"
-    cssesc "^3.0.0"
-    icss-utils "^4.1.1"
-    loader-utils "^1.2.3"
-    normalize-path "^3.0.0"
-    postcss "^7.0.17"
-    postcss-modules-extract-imports "^2.0.0"
-    postcss-modules-local-by-default "^3.0.2"
-    postcss-modules-scope "^2.1.0"
-    postcss-modules-values "^3.0.0"
-    postcss-value-parser "^4.0.0"
-    schema-utils "^2.0.0"
-
 css-prefers-color-scheme@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/css-prefers-color-scheme/-/css-prefers-color-scheme-3.1.1.tgz#6f830a2714199d4f0d0d0bb8a27916ed65cff1f4"
@@ -4084,6 +4066,16 @@ draft-js@^0.11.0:
     fbjs "^1.0.0"
     immutable "~3.7.4"
     object-assign "^4.1.0"
+
+draftjs-to-html@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/draftjs-to-html/-/draftjs-to-html-0.8.4.tgz#bda0adc00945db1f1baf0191b34b49b24191f1df"
+  integrity sha512-+4hekxc8dTJvKk6usiEsFX9O1uOD9vLZZOs9ZI3RhTe89yNmtazYII/ILDXfbMPfzNaYfX7Gf3zjRm6UUFxqyg==
+
+draftjs-utils@^0.9.3:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/draftjs-utils/-/draftjs-utils-0.9.4.tgz#976c61aa133dbbbfedd65ae1dd6627d7b98c6f08"
+  integrity sha512-KYjABSbGpJrwrwmxVj5UhfV37MF/p0QRxKIyL+/+QOaJ8J9z1FBKxkblThbpR0nJi9lxPQWGg+gh+v0dAsSCCg==
 
 duplexer@^0.1.1:
   version "0.1.1"
@@ -5587,6 +5579,11 @@ html-minifier@^3.5.20:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
+html-to-draftjs@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/html-to-draftjs/-/html-to-draftjs-1.4.0.tgz#8a3cbbba5b49d50be8ce85cc08b112d5bf00fc1d"
+  integrity sha1-ijy7ultJ1QvozoXMCLES1b8A/B0=
+
 html-webpack-plugin@4.0.0-beta.5:
   version "4.0.0-beta.5"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-4.0.0-beta.5.tgz#2c53083c1151bfec20479b1f8aaf0039e77b5513"
@@ -5713,7 +5710,7 @@ icss-replace-symbols@^1.1.0:
   resolved "https://registry.yarnpkg.com/icss-replace-symbols/-/icss-replace-symbols-1.1.0.tgz#06ea6f83679a7749e386cfe1fe812ae5db223ded"
   integrity sha1-Bupvg2ead0njhs/h/oEq5dsiPe0=
 
-icss-utils@^4.0.0, icss-utils@^4.1.0, icss-utils@^4.1.1:
+icss-utils@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-4.1.1.tgz#21170b53789ee27447c2f47dd683081403f9a467"
   integrity sha512-4aFq7wvWyMHKgxsH8QQtGpvbASCf+eM3wPRLI6R+MgAnTCZ6STYsRvttLvRWK0Nfif5piF394St3HeJDaljGPA==
@@ -7006,6 +7003,13 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+linkify-it@^2.0.3:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.2.0.tgz#e3b54697e78bf915c70a38acd78fd09e0058b1cf"
+  integrity sha512-GnAl/knGn+i1U/wjBz3akz2stz+HrHLsxMwHQGofCDfPvlf+gDKN58UtfmUquTY4/MXeE2x7k19KQmeoZi94Iw==
+  dependencies:
+    uc.micro "^1.0.1"
 
 lint-staged@^8.2.1:
   version "8.2.1"
@@ -8980,16 +8984,6 @@ postcss-modules-local-by-default@^2.0.6:
     postcss-selector-parser "^6.0.0"
     postcss-value-parser "^3.3.1"
 
-postcss-modules-local-by-default@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/postcss-modules-local-by-default/-/postcss-modules-local-by-default-3.0.2.tgz#e8a6561be914aaf3c052876377524ca90dbb7915"
-  integrity sha512-jM/V8eqM4oJ/22j0gx4jrp63GSvDH6v86OqyTHHUvk4/k1vceipZsaymiZ5PvocqZOl5SFHiFJqjs3la0wnfIQ==
-  dependencies:
-    icss-utils "^4.1.1"
-    postcss "^7.0.16"
-    postcss-selector-parser "^6.0.2"
-    postcss-value-parser "^4.0.0"
-
 postcss-modules-scope@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/postcss-modules-scope/-/postcss-modules-scope-2.1.0.tgz#ad3f5bf7856114f6fcab901b0502e2a2bc39d4eb"
@@ -9004,14 +8998,6 @@ postcss-modules-values@^2.0.0:
   integrity sha512-Ki7JZa7ff1N3EIMlPnGTZfUMe69FFwiQPnVSXC9mnn3jozCRBYIxiZd44yJOV2AmabOo4qFf8s0dC/+lweG7+w==
   dependencies:
     icss-replace-symbols "^1.1.0"
-    postcss "^7.0.6"
-
-postcss-modules-values@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/postcss-modules-values/-/postcss-modules-values-3.0.0.tgz#5b5000d6ebae29b4255301b4a3a54574423e7f10"
-  integrity sha512-1//E5jCBrZ9DmRX+zCtmQtRSV6PV42Ix7Bzj9GbwJceduuf7IqP8MgeTXuRDHOWj2m0VzZD5+roFWDuU8RQjcg==
-  dependencies:
-    icss-utils "^4.0.0"
     postcss "^7.0.6"
 
 postcss-nesting@^7.0.0:
@@ -9262,7 +9248,7 @@ postcss-selector-parser@^5.0.0, postcss-selector-parser@^5.0.0-rc.3, postcss-sel
     indexes-of "^1.0.1"
     uniq "^1.0.1"
 
-postcss-selector-parser@^6.0.0, postcss-selector-parser@^6.0.2:
+postcss-selector-parser@^6.0.0:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.2.tgz#934cf799d016c83411859e09dcecade01286ec5c"
   integrity sha512-36P2QR59jDTOAiIkqEprfJDsoNrvwFei3eCqKd1Y0tUsBimsq39BLp7RD+JWny3WgB1zGhJX8XVePwm9k4wdBg==
@@ -9294,11 +9280,6 @@ postcss-value-parser@^3.0.0, postcss-value-parser@^3.3.0, postcss-value-parser@^
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-3.3.1.tgz#9ff822547e2893213cf1c30efa51ac5fd1ba8281"
   integrity sha512-pISE66AbVkp4fDQ7VHBwRNXzAAKJjw4Vw7nWI/+Q3vuly7SNfgYXvm6i5IgFylHGK5sP/xHAbB7N49OS4gWNyQ==
-
-postcss-value-parser@^4.0.0:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.0.2.tgz#482282c09a42706d1fc9a069b73f44ec08391dc9"
-  integrity sha512-LmeoohTpp/K4UiyQCwuGWlONxXamGzCMtFxLq4W1nZVGIQLYvMCJx3yAF9qyyuFpflABI9yVdtJAqbihOsCsJQ==
 
 postcss-values-parser@^2.0.0, postcss-values-parser@^2.0.1:
   version "2.0.1"
@@ -10133,6 +10114,17 @@ react-dom@^16.8.6:
     prop-types "^15.6.2"
     scheduler "^0.13.6"
 
+react-draft-wysiwyg@^1.13.2:
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/react-draft-wysiwyg/-/react-draft-wysiwyg-1.13.2.tgz#1fc4130d057f0e731386bf831acca71108141899"
+  integrity sha512-qENNISR+bxO6G/ThTD6cai+LGrzkiGt6Fx9mqecJGPmyTIYVE5odsO7yEQVNBpZhgr5TvHAvwm3IoamcuFanDw==
+  dependencies:
+    classnames "^2.2.5"
+    draftjs-utils "^0.9.3"
+    html-to-draftjs "^1.4.0"
+    linkify-it "^2.0.3"
+    prop-types "^15.6.0"
+
 react-error-overlay@^5.1.6:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
@@ -10859,7 +10851,7 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-schema-utils@^2.0.0, schema-utils@^2.0.1:
+schema-utils@^2.0.1:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.1.0.tgz#940363b6b1ec407800a22951bdcc23363c039393"
   integrity sha512-g6SViEZAfGNrToD82ZPUjq52KUPDYc+fN5+g6Euo5mLokl/9Yx14z0Cu4RR1m55HtBXejO0sBt+qw79axN+Fiw==
@@ -11907,6 +11899,11 @@ ua-parser-js@^0.7.18:
   version "0.7.20"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.20.tgz#7527178b82f6a62a0f243d1f94fd30e3e3c21098"
   integrity sha512-8OaIKfzL5cpx8eCMAhhvTlft8GYF8b2eQr6JkCyVdrgjcytyOmPCXrqXFcUnhonRpLlh5yxEZVohm6mzaowUOw==
+
+uc.micro@^1.0.1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
+  integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
 
 uglify-js@3.4.x:
   version "3.4.10"
