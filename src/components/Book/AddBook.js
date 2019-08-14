@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Typography, Button, Alert, InputNumber, Select, Checkbox } from 'antd';
-import { bookServices } from 'services';
+import { bookServices, imgurServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-
-import BookImages from './BookImages';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -52,6 +50,7 @@ const AddBook = (props) => {
         }
         props.history.push('/500');
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const validateFields = () => {
@@ -110,6 +109,18 @@ const AddBook = (props) => {
     })
   }
 
+  const uploadImageDraftjs = (file) => {
+    return imgurServices.uploadImage(file)
+      .then(linkImg => {
+        return {
+          data: {
+            link: linkImg
+          }
+        }
+      })
+      .catch(() => {})
+  }
+
   return (
     <div style={{
       backgroundColor: '#FFFFFF',
@@ -149,7 +160,7 @@ const AddBook = (props) => {
               textAlign: { inDropdown: true },
               link: { inDropdown: true },
               history: { inDropdown: true },
-              image: { uploadCallback: () => Promise.resolve("ssdffsg"), alt: { present: true, mandatory: true } },
+              image: { uploadCallback: uploadImageDraftjs, alt: { present: true, mandatory: true } },
             }}
             onEditorStateChange={(eState) => setBook({
               ...book,
@@ -206,7 +217,7 @@ const AddBook = (props) => {
           </Select>
         </Form.Item>
         <Form.Item label="Images">
-          <BookImages bookImages={[]} {...props} />
+          {/* <BookImages bookImages={[]} {...props} /> */}
         </Form.Item>
         {errorText && (
           <Form.Item {...tailFormItemLayout}>

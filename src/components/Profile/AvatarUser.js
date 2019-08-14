@@ -1,7 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Avatar, Button, Modal, Row, Upload, message } from 'antd';
 import Cropper from 'react-cropper';
-import { firebaseServices, authServices } from 'services';
+import { authServices, imgurServices } from 'services';
 import openNotificationWithIcon from 'helpers/notification';
 import { UserContext } from 'UserContext';
 import 'cropperjs/dist/cropper.css';
@@ -11,18 +12,15 @@ export default function AvatarUser(props) {
 
   const [user, setUser] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-  const [srcAvatar, setSrcAvatar] = useState("");
   const [srcAvatarEdit, setSrcAvatarEdit] = useState("")
   const [visible, setVisible] = useState(false);
   const crop = useRef(null);
 
   useEffect(() => {
-    if (user && user.avatar) {
-      firebaseServices.getDownloadURL(user.avatar)
-        .then(src => setSrcAvatar(src))
-        .catch(() => setSrcAvatar(""))
-    }
+    
   }, [user])
+
+  const srcAvatar = (user && user.avatar) ? user.avatar : '';
 
   const handleChange = ({ file }) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -45,14 +43,10 @@ export default function AvatarUser(props) {
       width: 300,
       height: 300,
     }).toBlob(file => {
-      firebaseServices.uploadFileImage(file)
-        .then(path => {
-          authServices.editProfileUser({ avatar: path })
+      imgurServices.uploadImage(file)
+        .then(link => {
+          authServices.editProfileUser({ avatar: link })
             .then((data) => {
-              if(user.avatar)
-                firebaseServices.deleteFileImage(user.avatar)
-                  .then(() => { })
-                  .catch(() => { })
               setUser(data);
               openNotificationWithIcon("success", "Success", "Change Avatar Success");
             })

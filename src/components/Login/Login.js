@@ -191,7 +191,7 @@ const Login = (props) => {
               <span>or</span>
             </div>
             <GoogleLogin
-              clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE}
+              clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE || ''}
               onSuccess={handleLoginGoogle}
               onFailure={err => console.log(err)}
               cookiePolicy="single_host_origin"

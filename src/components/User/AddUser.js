@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Typography, Button, Select, Alert } from 'antd';
 import { userServices } from 'services';
@@ -61,6 +62,7 @@ const AddUser = (props) => {
         }
         props.history.push('/500');
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const validateEmail = (value) => {

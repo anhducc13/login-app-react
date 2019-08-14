@@ -20,6 +20,7 @@ export default ({ loader, loading }) => props => {
 
     // componentUnMount
     return () => (mounted = false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // return the loaded component

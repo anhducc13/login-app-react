@@ -65,6 +65,7 @@ const EditCategory = (props) => {
         }
         props.history.push('/500');
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
 

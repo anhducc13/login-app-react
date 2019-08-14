@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Layout, Icon, Dropdown, Menu, Avatar, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 import './CustomHeader.scss';
 import { UserContext } from 'UserContext';
 import openNotificationWithIcon from 'helpers/notification';
-import { authServices, firebaseServices } from 'services';
+import { authServices } from 'services';
 
 
 const { Header } = Layout;
@@ -13,15 +13,13 @@ const { confirm } = Modal;
 const CustomHeader = (props) => {
   const { isCollapse, collapseSider } = props;
   const [user, setUser] = useContext(UserContext);
-  const [avatarSrc, setAvatarSrc] = useState("")
 
   useEffect(() => {
-    if (user && user.avatar) {
-      firebaseServices.getDownloadURL(user.avatar)
-        .then(src => setAvatarSrc(src))
-        .catch(() => setAvatarSrc(""))
-    }
+
   }, [user])
+
+  const srcAvatar = (user && user.avatar) ? user.avatar : '';
+
 
   const handleLogout = () => {
     confirm({
@@ -89,8 +87,8 @@ const CustomHeader = (props) => {
           }}
         >
           <Avatar
-            icon={avatarSrc ? '' : 'user'}
-            src={avatarSrc || ""}
+            icon={srcAvatar ? '' : 'user'}
+            src={srcAvatar || ""}
           />
           {'  '}
           <span
