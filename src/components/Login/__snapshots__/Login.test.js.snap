@@ -139,6 +139,42 @@ exports[`Login Page Render should render correctly 1`] = `
           Login
         </Button>
       </FormItem>
+      <FormItem
+        hasFeedback={false}
+      >
+        <div
+          className="social-divider"
+        >
+          <span>
+            or
+          </span>
+        </div>
+        <e
+          accessType="online"
+          buttonText="Sign in with Google"
+          clientId="335058615265-8prgp3oprps9sucnlubbs7rc3slgat1m.apps.googleusercontent.com"
+          cookiePolicy="single_host_origin"
+          disabledStyle={
+            Object {
+              "opacity": 0.6,
+            }
+          }
+          fetchBasicProfile={true}
+          icon={true}
+          isSignedIn={false}
+          jsSrc="https://apis.google.com/js/api.js"
+          onFailure={[Function]}
+          onRequest={[Function]}
+          onSuccess={[Function]}
+          prompt=""
+          render={[Function]}
+          scope="profile email"
+          tag="button"
+          theme="light"
+          type="button"
+          uxMode="popup"
+        />
+      </FormItem>
     </Form>
   </Col>
 </div>

@@ -11,12 +11,18 @@
     "browser": true,
     "jest": true
   },
+  "plugins": [
+    // ...
+    "react-hooks"
+  ],
   "rules": {
     "max-len": ["error", { "code": 120 }],
     "prefer-promise-reject-errors": ["off"],
     "react/jsx-filename-extension": ["off"],
     "react/prop-types": ["warn"],
-    "no-return-assign": ["off"]
+    "no-return-assign": ["off"],
+    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": "warn" // Checks effect dependencies
   },
   "settings": {
     "import/resolver": {
