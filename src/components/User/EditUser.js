@@ -188,7 +188,10 @@ const EditUser = (props) => {
           </Select>
         </Form.Item>
         <Form.Item label="Active">
-          <Checkbox checked={dataUser.is_active} onChange={(e) => setDataUser({ ...dataUser, is_active: e.target.checked })} />
+          <Checkbox
+            checked={dataUser.is_active}
+            onChange={(e) => setDataUser({ ...dataUser, is_active: e.target.checked })} 
+          />
         </Form.Item>
         <Form.Item label="Birthday">
           <DatePicker

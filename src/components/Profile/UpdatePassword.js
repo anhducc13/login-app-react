@@ -62,6 +62,7 @@ const UpdatePassword = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorText('');
     if (password.value === "") {
       setPassword({
         helper: "Please enter password"

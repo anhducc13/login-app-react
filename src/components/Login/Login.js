@@ -31,47 +31,54 @@ const Login = (props) => {
     xxl: { span: 6, offset: 9 },
   }
 
+  const [state, setState] = useState({
+    username: "",
+    helperUsername: "",
+    password: "",
+    helperPassword: "",
+  })
   const [loading, setLoading] = useState(false);
-
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [helperUsername, setHelperUsername] = useState("")
-  const [helperPassword, setHelperPassword] = useState("")
   const [errorText, setErrorText] = useState("")
-
   const [, setUser] = useContext(UserContext);
 
   const validateInput = () => {
-    if (username === "")
-      setHelperUsername("Please enter username");
+    let { helperUsername, helperPassword } = state;
+    if (state.username === "")
+      helperUsername = "Please enter username";
     else
-      setHelperUsername("");
+      helperUsername = "";
 
-    if (password === "")
-      setHelperPassword("Please enter password")
+    if (state.password === "")
+      helperPassword = "Please enter password";
     else
-      setHelperPassword("");
+      helperPassword = "";
+    
+    setState({
+      ...state,
+      helperUsername,
+      helperPassword
+    })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     validateInput();
     setErrorText("")
-    if (username !== "" && password !== "") {
-      setLoading(true);
+    if (state.username !== "" && state.password !== "") {
+      setLoading(true)
       const params = {
-        "username": username,
-        "password": password,
+        "username": state.username,
+        "password": state.password,
       }
       authServices.loginUser(params)
         .then(data => {
-          setLoading(false);
+          setLoading(false)
           setUser(data);
           openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
           props.history.push('/');
         })
         .catch(err => {
-          setLoading(false);
+          setLoading(false)
           if (err && err.response) {
             const { status, data } = err.response;
             if (status === 400) {
@@ -84,7 +91,7 @@ const Login = (props) => {
             }
             if (status === 403) {
               if (data.message === "Account warning") {
-                setErrorText("You enter wrong password 3 times. 5 times, account will be block")
+                setErrorText(data.message)
                 return;
               }
               setErrorText("Account has been block. Please try after")
@@ -106,13 +113,11 @@ const Login = (props) => {
     }
     authServices.loginGoogle(params)
       .then(data => {
-        setLoading(false);
         setUser(data);
         openNotificationWithIcon('success', 'Success', `Welcome back, ${data.username}!`)
         props.history.push('/');
       })
       .catch(err => {
-        setLoading(false);
         if (err && err.response) {
           const { status, data } = err.response;
           if (status === 400) {
@@ -157,11 +162,27 @@ const Login = (props) => {
               showIcon
             />
           )}
-          <Form.Item label="Username" help={helperUsername} validateStatus={helperUsername && "error"}>
-            <Input size="large" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <Form.Item label="Username" help={state.helperUsername} validateStatus={state.helperUsername && "error"}>
+            <Input
+              size="large"
+              name="username"
+              value={state.username}
+              onChange={(e) => setState({
+                  ...state,
+                  username: e.target.value
+                })}
+            />
           </Form.Item>
-          <Form.Item label="Password" help={helperPassword} validateStatus={helperPassword && "error"}>
-            <Password size="large" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Form.Item label="Password" help={state.helperPassword} validateStatus={state.helperPassword && "error"}>
+            <Password
+              size="large"
+              name="password"
+              value={state.password}
+              onChange={(e) => setState({
+                ...state,
+                password: e.target.value
+              })} 
+            />
           </Form.Item>
           <Row>
             <Col span={12}>

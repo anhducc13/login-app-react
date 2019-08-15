@@ -35,10 +35,10 @@ const CustomHeader = (props) => {
           .catch((err) => {
             if(err && err.response) {
               const { status, data } = err.response;
-              if(status === 401) {
+              if(status === 401 || status === 403) {
                 openNotificationWithIcon('error', 'Error', "Session expired. Please login to continue")
                 props.history.push('/login');
-              } 
+              }
               if(status === 404) {
                 props.history.push('/404');
                 return;

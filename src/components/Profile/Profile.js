@@ -59,7 +59,6 @@ export default function Profile(props) {
     userServices.fetchRoles()
       .then(result => setRoles(result))
       .catch(() => setRoles([]))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   const handleChangeInput = e => {
@@ -89,14 +88,14 @@ export default function Profile(props) {
       'fullname': dataUser.fullname,
       'phone_number': dataUser.phone_number,
       'gender': dataUser.gender,
-      'birthday': new Date(dataUser.birthday),
+      'birthday': dataUser.birthday ? new Date(dataUser.birthday) : null,
     }
 
     authServices.editProfileUser(payload)
       .then((data) => {
         setUser(data);
         setLoading(false);
-        openNotificationWithIcon("success", "Success", "Update pprofile success");
+        openNotificationWithIcon("success", "Success", "Update profile success");
       })
       .catch((err) => {
         setLoading(false);
