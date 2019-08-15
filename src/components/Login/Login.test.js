@@ -72,20 +72,20 @@ describe('Login Page Submit Form', () => {
     component.find('input[name="username"]').simulate('change', { target: { value: "a" } });
     component.find('input[name="password"]').simulate('change', { target: { value: "b" } });
     component.find('button[type="submit"]').simulate('click');
-    expect(loginSpy).toHaveBeenCalledWith({"username": "a", "password": "b"});
+    expect(loginSpy).toHaveBeenCalledWith({ "username": "a", "password": "b" });
   })
 
   it('Submit login will not call loginUser success', async () => {
     const loginSpy = jest.spyOn(authServices, 'loginUser')
     try {
-      const res = await loginSpy();
-    } catch {
+      await loginSpy();
+    } catch (err) {
       const component = mount(
         <MemoryRouter>
           <Login />
         </MemoryRouter>
       );
-      expect(component.find('.ant-alert-message').length).toBe(1)
+      expect(component.find('div.ant-alert').length).toBe({})
       component.unmount()
     }
   })

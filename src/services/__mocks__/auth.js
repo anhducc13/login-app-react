@@ -2,8 +2,9 @@ const loginUser = (payload) => new Promise((resolve, reject) => {
     reject({
         response: {
             data: {
-                message: "sadfsdf"
-            }
+                message: "sadfsdf",
+            },
+            status: 400,
         }
     })
 })
