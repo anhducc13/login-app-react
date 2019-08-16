@@ -11,7 +11,7 @@ const validateEmail = (email) => {
 }
 
 const validateUsername = (username) => {
-    const REGEX_USERNAME = /^[A-Za-z]+\d$/;
+    const REGEX_USERNAME = /(?!^[0-9]*$)(?!^[a-zA-Z]*$)^([a-zA-Z0-9]{6,128})$/;
     if (username.length === 0) {
         return "Username not empty"
     }
@@ -25,7 +25,7 @@ const validateUsername = (username) => {
 }
 
 const validatePassword = (password) => {
-    const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    const REGEX_PASSWORD = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,128}$/;
     if (password.length === 0) {
         return "Password not empty"
     }

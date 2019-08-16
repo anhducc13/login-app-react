@@ -21,7 +21,7 @@ describe('Register form validate', () => {
     );
     component.find('input[name="username"]').simulate('change', { target: { value: "" } });
     expect(component.find('div.ant-form-explain').first().text())
-      .toBe("Username contain letter and number and not special character")
+      .toBe("Username not empty")
     component.unmount()
   })
 
@@ -34,7 +34,7 @@ describe('Register form validate', () => {
     component.find('input[name="email"]').simulate('change', { target: { value: "ab" } });
     component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
     component.find('input[name="password"]').simulate('change', { target: { value: "a" } });
-    component.find('input[name="password"]').simulate('change', { target: { value: "a" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "a" } });
     expect(component.find('div.ant-form-explain').length)
       .toBe(2)
     expect(component.find('div.ant-form-explain').first().text())
@@ -48,10 +48,10 @@ describe('Register form validate', () => {
         <Register />
       </MemoryRouter>
     );
-    component.find('input[name="email"]').simulate('change', { target: { value: "duc.tt@teko.vn" } });
-    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc14" } });
-    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc14" } });
-    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "Anhducc14" } });
+    component.find('input[name="email"]').simulate('change', { target: { value: "trantienduc10@gmail.com" } });
+    component.find('input[name="username"]').simulate('change', { target: { value: "anhducc13" } });
+    component.find('input[name="password"]').simulate('change', { target: { value: "Anhducc13" } });
+    component.find('input[name="repeat-password"]').simulate('change', { target: { value: "Anhducc13" } });
     expect(component.find('div.ant-form-explain').length)
       .toBe(0)
     component.unmount();
